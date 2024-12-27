@@ -16,4 +16,9 @@ fun main() {
     println("Test2")
 
     println("id ${p1.id} name ${p1.name}")
+
+
+    
+    println("id ${p1.id} name ${p1.name}")
+
 }
