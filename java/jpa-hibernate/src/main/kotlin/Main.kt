@@ -13,11 +13,13 @@ fun main() {
     println("test")
 
     println("Test2")
-
+    print("dada")
     println("id ${p1.id} name ${p1.name}")
 
     println("id ${p1.id} name ${p1.name}")
 
+    print("dada")
+    print("dada")
     print("dada")
     print("dada")
 
