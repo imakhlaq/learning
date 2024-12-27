@@ -15,6 +15,7 @@ dependencies {
     implementation("org.hibernate.orm:hibernate-core:7.0.0.Beta3")
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     implementation("org.postgresql:postgresql:42.7.4")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks.test {
@@ -22,4 +23,5 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(21)
+    jvmToolchain(8)
 }

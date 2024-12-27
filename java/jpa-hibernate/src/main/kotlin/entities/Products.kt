@@ -19,4 +19,13 @@ class Product {
      field=value
  }
  */
+
+    /*
+ To set getter and setter
+var name: String? = null
+ get()=field
+ set(value){
+ field=value
+}
+*/
 }
