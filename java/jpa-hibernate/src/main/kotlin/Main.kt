@@ -10,5 +10,9 @@ fun main() {
     p1.name = "Product name"
 
 
+
+    println("test")
+
+
     println("id ${p1.id} name ${p1.name}")
 }
