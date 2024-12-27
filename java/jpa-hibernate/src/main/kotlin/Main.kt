@@ -18,7 +18,7 @@ fun main() {
 
     println("id ${p1.id} name ${p1.name}")
 
-
+    print("dada")
     print("dada")
 
 }
