@@ -13,6 +13,7 @@ fun main() {
 
     println("test")
 
+    println("Test2")
 
     println("id ${p1.id} name ${p1.name}")
 }
