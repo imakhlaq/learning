@@ -15,6 +15,8 @@ dependencies {
     implementation("org.hibernate.orm:hibernate-core:7.0.0.Beta3")
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     implementation("org.postgresql:postgresql:42.7.4")
+    // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
+    implementation("com.zaxxer:HikariCP:6.2.1")
     implementation(kotlin("stdlib-jdk8"))
 }
 
