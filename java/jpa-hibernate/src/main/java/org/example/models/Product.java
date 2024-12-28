@@ -6,6 +6,6 @@ import jakarta.persistence.Id;
 @Entity
 public class Product {
     @Id
-    public Long id;
+    public String id;
     public String name;
 }
