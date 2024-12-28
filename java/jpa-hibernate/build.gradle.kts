@@ -1,8 +1,8 @@
 plugins {
-    kotlin("jvm") version "2.0.21"
+    id("java")
 }
 
-group = "com.learn"
+group = "org.example"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -10,20 +10,19 @@ repositories {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
-    // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
-    implementation("org.hibernate.orm:hibernate-core:7.0.0.Beta3")
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     implementation("org.postgresql:postgresql:42.7.4")
     // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
     implementation("com.zaxxer:HikariCP:6.2.1")
-    implementation(kotlin("stdlib-jdk8"))
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+    implementation("org.hibernate:hibernate-core:7.0.0.Beta3")
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly("org.projectlombok:lombok:1.18.36")
+
 }
 
 tasks.test {
     useJUnitPlatform()
-}
-kotlin {
-    jvmToolchain(21)
-    jvmToolchain(8)
 }
