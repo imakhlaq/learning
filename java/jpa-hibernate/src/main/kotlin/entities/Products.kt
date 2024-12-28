@@ -7,7 +7,7 @@ import java.util.*
 @Entity
 class Product {
 
-    @get:Id
+    @Id
     var id: UUID? = null
 
     var name: String? = null
