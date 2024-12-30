@@ -6,6 +6,11 @@ import org.example.persistance.PersistenceConfig;
 import java.io.IOException;
 
 public class Main {
+
+    public static void createProduct(Product product) {
+
+    }
+
     public static void main(String[] args) throws IOException {
 
         var entityManagerFactory = PersistenceConfig.getEntityManagerFactory();

@@ -15,6 +15,10 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
 
+/*
+Class for providing database details.
+ */
+
 public class CustomPersistenceUnitInfo implements PersistenceUnitInfo {
     @Override
     public String getPersistenceUnitName() {
