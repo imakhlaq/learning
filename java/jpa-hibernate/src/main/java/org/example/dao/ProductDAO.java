@@ -30,8 +30,14 @@ public class ProductDAO {
         var entityManagerFactory = PersistenceConfig.getEntityManagerFactory();
         var em = entityManagerFactory.createEntityManager();
         var tsx = em.getTransaction();
-
+        tsx.begin();
+        //Level-1 cashed will be checked first if it doesn't exist it will send query to db.
+        //And store it in persistence context
         var detail = em.find(Product.class, 1L);
+
+        detail.name = "samanta";// automatically will be synced with db when tsx is commited
+
+        tsx.commit();
 
     }
 }

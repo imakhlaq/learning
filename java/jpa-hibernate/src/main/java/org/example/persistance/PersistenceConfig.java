@@ -18,9 +18,15 @@ public class PersistenceConfig {
 
         if (entityManagerFactory == null) {
             synchronized (PersistenceConfig.class) {
-                if (entityManagerFactory == null)
+                if (entityManagerFactory == null) {
+
+                    var hibernateProps = new HashMap<String, String>();
+                    hibernateProps.put("hibernate.show_sql", "true");
+                    hibernateProps.put("hibernate.hbm2ddl", "update");//create, none, update
+
                     entityManagerFactory = new HibernatePersistenceProvider()
-                        .createContainerEntityManagerFactory(new CustomPersistenceUnitInfo(), new HashMap<>());
+                        .createContainerEntityManagerFactory(new CustomPersistenceUnitInfo(), hibernateProps);
+                }
             }
         }
         return entityManagerFactory;
