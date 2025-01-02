@@ -49,7 +49,7 @@ public class CustomPersistenceUnitInfo implements PersistenceUnitInfo {
     public DataSource getJtaDataSource() {
         Properties properties = null;
         try {
-            var filePath = "F:\\dev\\learning\\java\\jpa-hibernate\\src\\main\\resources\\META-INF\\hibernate.properties";
+            var filePath = "F:\\dev\\learning\\java\\jpa-hibernate\\src\\main\\resources\\hibernate.properties";
             properties = new Properties();
             properties.load(Files.newInputStream(Path.of(filePath)));
         } catch (Exception e) {
