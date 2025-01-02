@@ -7,7 +7,7 @@ import java.util.UUID;
 public class OneToOneExp {
 }
 
-//one directional one-to-one relationship
+//uni-directional one-to-one relationship
 @Entity
 class Account {
 
@@ -30,7 +30,7 @@ class User {
 
 }
 
-//bidirectional one-to-one relationship
+//bi-directional one-to-one relationship
 @Entity
 class AccountBi {
 
