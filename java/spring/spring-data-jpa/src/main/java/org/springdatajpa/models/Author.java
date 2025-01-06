@@ -1,21 +1,23 @@
 package org.springdatajpa.models;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Data //== @Getter, @Setter, @ToString, @RequiredConstructor
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder           //<- in case of inheritance
+@EqualsAndHashCode(callSuper = true) //<- in case of inheritance
 @Entity
 @Table(name = "author")
-public class Author {
+public class Author extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID authorId;// if its null hibernate will assign the value to it
@@ -26,13 +28,6 @@ public class Author {
     private String email;
 
     private Integer age;
-
-    @Column(name = "created_at", updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     //owner of relationship (in code only. it will not have foreign key on dB)
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
@@ -46,15 +41,6 @@ public class Author {
             referencedColumnName = "courseId"
         )
     )
-    List<Course> courses;
+    private List<Course> courses;
 
-    @PostConstruct
-    private void createdAt() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PostUpdate
-    private void updatedAt() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }

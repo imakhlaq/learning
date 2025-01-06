@@ -1,10 +1,8 @@
 package org.springdatajpa.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,10 +10,11 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder           //<- in case of inheritance
+@EqualsAndHashCode(callSuper = true) //<- in case of inheritance
 @Entity
-@Table(name = "cource_table")
-public class Course {
+@Table(name = "course_table")
+public class Course extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -26,5 +25,8 @@ public class Course {
     private String description;
 
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
-    List<Author> authors;
+    private List<Author> authors;
+
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    private List<Section> sections;
 }
