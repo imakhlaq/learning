@@ -11,3 +11,5 @@ build_property.RootNamespace = c_
 build_property.ProjectDir = F:\dev\learning\c#\c#\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
