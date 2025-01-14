@@ -2,11 +2,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "contactmanager", "contactmanager\contactmanager.csproj", "{DC167D48-FCB9-4B37-AA83-B32D6D3DD5C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "contactmanagertest", "contactmanagertest\contactmanagertest.csproj", "{39CE60DF-A5FA-42B5-BDD2-01F73560A9CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{39CE60DF-A5FA-42B5-BDD2-01F73560A9CE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{64FC865F-D829-4D61-A0D1-FB2E0EAD8D27}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "serviceContracts", "serviceContracts\serviceContracts.csproj", "{E8A5FF7C-829D-4D78-AA15-F7A0875E2A64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "services", "services\services.csproj", "{0DCBACB7-9128-45DA-BA30-6319B784DF68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +32,9 @@ Global
 		{E8A5FF7C-829D-4D78-AA15-F7A0875E2A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8A5FF7C-829D-4D78-AA15-F7A0875E2A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8A5FF7C-829D-4D78-AA15-F7A0875E2A64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DCBACB7-9128-45DA-BA30-6319B784DF68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DCBACB7-9128-45DA-BA30-6319B784DF68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DCBACB7-9128-45DA-BA30-6319B784DF68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DCBACB7-9128-45DA-BA30-6319B784DF68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

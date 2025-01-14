@@ -1,0 +1,12 @@
+F:\dev\learning\c#\.netcore\contactmanager\Entities\bin\Debug\net9.0\Entities.deps.json
+F:\dev\learning\c#\.netcore\contactmanager\Entities\bin\Debug\net9.0\Entities.dll
+F:\dev\learning\c#\.netcore\contactmanager\Entities\bin\Debug\net9.0\Entities.pdb
+F:\dev\learning\c#\.netcore\contactmanager\Entities\obj\Debug\net9.0\Entities.GeneratedMSBuildEditorConfig.editorconfig
+F:\dev\learning\c#\.netcore\contactmanager\Entities\obj\Debug\net9.0\Entities.AssemblyInfoInputs.cache
+F:\dev\learning\c#\.netcore\contactmanager\Entities\obj\Debug\net9.0\Entities.AssemblyInfo.cs
+F:\dev\learning\c#\.netcore\contactmanager\Entities\obj\Debug\net9.0\Entities.csproj.CoreCompileInputs.cache
+F:\dev\learning\c#\.netcore\contactmanager\Entities\obj\Debug\net9.0\Entities.sourcelink.json
+F:\dev\learning\c#\.netcore\contactmanager\Entities\obj\Debug\net9.0\Entities.dll
+F:\dev\learning\c#\.netcore\contactmanager\Entities\obj\Debug\net9.0\refint\Entities.dll
+F:\dev\learning\c#\.netcore\contactmanager\Entities\obj\Debug\net9.0\Entities.pdb
+F:\dev\learning\c#\.netcore\contactmanager\Entities\obj\Debug\net9.0\ref\Entities.dll

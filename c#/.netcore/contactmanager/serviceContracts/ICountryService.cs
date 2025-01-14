@@ -1,5 +1,9 @@
-﻿namespace serviceContracts;
+﻿using Entities;
+using serviceContracts.DTO;
 
-public class ICountryService
+namespace serviceContracts;
+
+public interface ICountryService
 {
+   Country AddCountry(CountryAddRequest countryAddRequest);
 }

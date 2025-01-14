@@ -1,0 +1,16 @@
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\bin\Debug\net9.0\serviceContracts.deps.json
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\bin\Debug\net9.0\serviceContracts.dll
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\bin\Debug\net9.0\serviceContracts.pdb
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\bin\Debug\net9.0\Entities.dll
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\bin\Debug\net9.0\Entities.pdb
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\obj\Debug\net9.0\serviceContracts.csproj.AssemblyReference.cache
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\obj\Debug\net9.0\serviceContracts.GeneratedMSBuildEditorConfig.editorconfig
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\obj\Debug\net9.0\serviceContracts.AssemblyInfoInputs.cache
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\obj\Debug\net9.0\serviceContracts.AssemblyInfo.cs
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\obj\Debug\net9.0\serviceContracts.csproj.CoreCompileInputs.cache
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\obj\Debug\net9.0\serviceContracts.sourcelink.json
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\obj\Debug\net9.0\serviceC.85FD4646.Up2Date
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\obj\Debug\net9.0\serviceContracts.dll
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\obj\Debug\net9.0\refint\serviceContracts.dll
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\obj\Debug\net9.0\serviceContracts.pdb
+F:\dev\learning\c#\.netcore\contactmanager\serviceContracts\obj\Debug\net9.0\ref\serviceContracts.dll
