@@ -10,16 +10,15 @@ public class CountriesService : ICountryService
 
     public CountriesService()
     {
-        this._countries = new List<Country>();
+        _countries = new List<Country>();
     }
 
 
-    public Country AddCountry(CountryAddRequest countryAddRequest)
+    public CountryResponse AddCountry(CountryAddRequest countryAddRequest)
     {
+        if (countryAddRequest == null) throw new ArgumentNullException();
+        if (countryAddRequest.CountryName == null) throw new ArgumentException();
 
-        if (countryAddRequest==null) throw new ArgumentNullException();
-        if (countryAddRequest.CountryName==null)throw new ArgumentException();
-        
         //convert CountryEntity from CountryAddRequest
         var countryFromReq = countryAddRequest.ToCountryEntity();
 
@@ -32,7 +31,28 @@ public class CountriesService : ICountryService
 
         //Add country to db
         _countries.Add(countryFromReq);
-        
+
         return countryFromReq.ToCountryResponse();
+    }
+
+    public List<CountryResponse> GetAllCountry()
+    {
+        //selecting whole country record from dB
+        var allCountries = _countries.Select(country => country).ToList();
+
+        //converting all counties entities to country response
+        var allCountryToResponse = allCountries.Select(c => c.ToCountryResponse()).ToList();
+
+
+        return allCountryToResponse;
+    }
+
+    public CountryResponse? GetCountryById(Guid id)
+    {
+        if (id == Guid.Empty) throw new ArgumentNullException();
+
+        var country = _countries.First(c => c.id == id);
+
+        return country.ToCountryResponse();
     }
 }

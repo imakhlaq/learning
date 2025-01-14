@@ -1006,7 +1006,6 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "Entities >= 1.0.0",
       "Microsoft.NET.Test.Sdk >= 17.11.1",
       "contactmanager >= 1.0.0",
       "coverlet.collector >= 6.0.2",
@@ -1043,9 +1042,6 @@
           "projectReferences": {
             "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\contactmanager.csproj": {
               "projectPath": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\contactmanager.csproj"
-            },
-            "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\Entities\\Entities.csproj": {
-              "projectPath": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\Entities\\Entities.csproj"
             },
             "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\serviceContracts\\serviceContracts.csproj": {
               "projectPath": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\serviceContracts\\serviceContracts.csproj"
