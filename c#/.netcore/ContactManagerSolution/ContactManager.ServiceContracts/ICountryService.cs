@@ -4,6 +4,7 @@ namespace ContactManager.ServiceContracts;
 
 public interface ICountryService
 {
+    //service receives DTOS
     Task<CountryResponse> AddCountry(CountryAddRequest countryAddRequest);
     Task<List<CountryResponse>> GetAllCountry();
 

@@ -7,4 +7,9 @@
         <RootNamespace>ContactManager.Repository</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\ContactManager.Entities\ContactManager.Entities.csproj"/>
+        <ProjectReference Include="..\ContactManager.RepositoryContracts\ContactManager.RepositoryContracts.csproj"/>
+    </ItemGroup>
+
 </Project>

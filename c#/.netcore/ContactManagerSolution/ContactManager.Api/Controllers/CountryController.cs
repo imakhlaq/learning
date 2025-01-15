@@ -1,6 +1,5 @@
 ﻿using ContactManager.ServiceContracts;
 using Microsoft.AspNetCore.Mvc;
-using serviceContracts;
 
 namespace ContactManager.Api.Controllers;
 

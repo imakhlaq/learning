@@ -1,4 +1,3 @@
-
 using ContactManager.Entities.AppDbContext;
 using ContactManager.ServiceContracts;
 using ContactManager.Services;
