@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using Entities.DbContext;
+using Microsoft.EntityFrameworkCore;
 using serviceContracts;
 using serviceContracts.DTO;
 
@@ -6,15 +7,16 @@ namespace services;
 
 public class CountriesService : ICountryService
 {
-    private readonly List<Country> _countries;
+    private readonly AppDbContext _db; //using this perform operations on db
 
-    public CountriesService()
+    public CountriesService(AppDbContext context)
     {
-        _countries = new List<Country>();
+        //context will be injected by IOC because we added it as service in context
+        _db = context;
     }
 
 
-    public CountryResponse AddCountry(CountryAddRequest countryAddRequest)
+    public async Task<CountryResponse> AddCountry(CountryAddRequest countryAddRequest)
     {
         if (countryAddRequest == null) throw new ArgumentNullException();
         if (countryAddRequest.CountryName == null) throw new ArgumentException();
@@ -23,22 +25,26 @@ public class CountriesService : ICountryService
         var countryFromReq = countryAddRequest.ToCountryEntity();
 
         //checking if country already exists
-        var isCountryExist = _countries.Any(country => country.name == countryFromReq.name);
+        var isCountryExist = _db.Countries.Any(country => country.Name == countryFromReq.Name);
 
         if (isCountryExist) throw new ArgumentException();
 
         countryFromReq.Id = Guid.NewGuid();
 
         //Add country to db
-        _countries.Add(countryFromReq);
+        await _db.Countries.AddAsync(countryFromReq);
+
+
+        await _db.SaveChangesAsync(); // to commit the changes;
 
         return countryFromReq.ToCountryResponse();
     }
 
-    public List<CountryResponse> GetAllCountry()
+    public async Task<List<CountryResponse>> GetAllCountry()
     {
         //selecting whole country record from dB
-        var allCountries = _countries.Select(country => country).ToList();
+        var allCountries = await _db.Countries
+            .ToListAsync();
 
         //converting all counties entities to country response
         var allCountryToResponse = allCountries.Select(c => c.ToCountryResponse()).ToList();
@@ -47,11 +53,14 @@ public class CountriesService : ICountryService
         return allCountryToResponse;
     }
 
-    public CountryResponse? GetCountryById(Guid id)
+    public async Task<CountryResponse?> GetCountryById(Guid id)
     {
         if (id == Guid.Empty) throw new ArgumentNullException();
 
-        var country = _countries.First(c => c.Id == id);
+        var country = await _db.Countries
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (country == null) return null;
 
         return country.ToCountryResponse();
     }

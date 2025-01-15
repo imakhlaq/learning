@@ -1,0 +1,16 @@
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\bin\Debug\net9.0\ContactManager.ServiceContracts.deps.json
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\bin\Debug\net9.0\ContactManager.ServiceContracts.dll
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\bin\Debug\net9.0\ContactManager.ServiceContracts.pdb
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\bin\Debug\net9.0\ContactManager.Entities.dll
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\bin\Debug\net9.0\ContactManager.Entities.pdb
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\obj\Debug\net9.0\ContactManager.ServiceContracts.csproj.AssemblyReference.cache
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\obj\Debug\net9.0\ContactManager.ServiceContracts.GeneratedMSBuildEditorConfig.editorconfig
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\obj\Debug\net9.0\ContactManager.ServiceContracts.AssemblyInfoInputs.cache
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\obj\Debug\net9.0\ContactManager.ServiceContracts.AssemblyInfo.cs
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\obj\Debug\net9.0\ContactManager.ServiceContracts.csproj.CoreCompileInputs.cache
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\obj\Debug\net9.0\ContactManager.ServiceContracts.sourcelink.json
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\obj\Debug\net9.0\ContactM.A74D659A.Up2Date
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\obj\Debug\net9.0\ContactManager.ServiceContracts.dll
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\obj\Debug\net9.0\refint\ContactManager.ServiceContracts.dll
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\obj\Debug\net9.0\ContactManager.ServiceContracts.pdb
+F:\dev\learning\c#\.netcore\ContactManagerSolution\ContactManager.ServiceContracts\obj\Debug\net9.0\ref\ContactManager.ServiceContracts.dll

@@ -1,4 +1,6 @@
 ﻿using Entities;
+using Entities.DbContext;
+using Microsoft.EntityFrameworkCore;
 using serviceContracts;
 using serviceContracts.DTO;
 using Services.Enums;
@@ -8,20 +10,38 @@ namespace services;
 
 public class PersonService : IPersonService
 {
-    private readonly List<Person> _persons;
+    private readonly AppDbContext _db;
 
-    public PersonService()
+    public PersonService(AppDbContext context)
     {
-        _persons = new List<Person>();
+        _db = context;
+    }
+
+    public async Task<List<PersonResponse>> GetSortedPersons(string sortedBy, SortedOrder sortedOrder = SortedOrder.ASC)
+    {
+        if (sortedBy == null) throw new ArgumentNullException();
+
+
+        var personsInSorted = await _db.Persons
+            .OrderByDescending(p => p.Name)
+            .ToListAsync();
+
+        var mapToRes = personsInSorted
+            .Select(e => e.ToPersonResponse())
+            .ToList();
+
+        return mapToRes;
     }
 
 
-    public PersonResponse AddPerson(PersonAddRequest personAddRequest)
+    public async Task<PersonResponse> AddPerson(PersonAddRequest personAddRequest)
     {
         if (personAddRequest == null) throw new ArgumentNullException();
 
         //check if already exits
-        var personAlreadyPresent = _persons.Find(p => p.Email == personAddRequest.Email);
+        var personAlreadyPresent = await _db.Persons
+            .Include("Country")
+            .FirstOrDefaultAsync(p => p.Email == personAddRequest.Email);
 
         if (personAlreadyPresent != null) return personAlreadyPresent.ToPersonResponse();
 
@@ -40,90 +60,99 @@ public class PersonService : IPersonService
             CountryId = personAddRequest.CountryId,
             ReceiveNewsLetters = personAddRequest.ReceiveNewsLetters
         };
-        _persons.Add(person);
+        await _db.Persons.AddAsync(person);
+
+        await _db.SaveChangesAsync();
 
         return person.ToPersonResponse();
     }
 
-    public List<PersonResponse> GetAllPerson()
+    public async Task<List<PersonResponse>> GetAllPerson()
     {
         //getting all person from db and converting it to Person Response
-        var allPersons = _persons.Select(person => person.ToPersonResponse())
-            .ToList();
+        var allPersons = await _db.Persons
+            .ToListAsync();
 
-        return allPersons;
+        return allPersons
+            .Select(p => p.ToPersonResponse())
+            .ToList();
     }
 
-    public PersonResponse? GetPersonById(Guid id)
+    public async Task<PersonResponse?> GetPersonById(Guid id)
     {
         if (id == Guid.Empty) return null;
 
-        var person = _persons.FirstOrDefault(p => p.Id == id); //default will return null
+        var person = await _db.Persons
+            .Include("Country")
+            .FirstOrDefaultAsync(p => p.Id == id); //default will return null
         if (person == null) return null;
 
         return person.ToPersonResponse();
     }
 
-    public List<PersonResponse> GetFilterPersons(string searchBy, string? searchString)
+    public async Task<List<PersonResponse>> GetFilterPersons(string searchBy, string? searchString)
     {
-        if (string.IsNullOrEmpty(searchBy)) return GetAllPerson();
+        if (string.IsNullOrEmpty(searchBy)) return await GetAllPerson();
 
         switch (searchBy)
         {
             case nameof(Person.Name):
             {
                 //is search string is not provided
-                if (searchString == null) return _persons.Select(p => p.ToPersonResponse()).ToList();
+                if (searchString == null)
+                {
+                    var data = await _db.Persons.ToListAsync();
+                    return data.Select(p => p.ToPersonResponse()).ToList();
+                }
+
 
                 //checking db for data with the searchString
-                return _persons.Where(p => p.Name.Contains(searchString))
+                return _db.Persons
+                    .Where(p => p.Name.Contains(searchString))
                     .Select(s => s.ToPersonResponse()).ToList();
             }
 
             case nameof(Person.Email):
             {
                 //is search string is not provided
-                if (searchString == null) return _persons.Select(p => p.ToPersonResponse()).ToList();
+                if (searchString == null)
+                    return _db.Persons.ToList()
+                        .Select(p => p.ToPersonResponse()).ToList();
 
                 //checking db for data with the searchString
-                return _persons.Where(p => p.Email.Contains(searchString))
+                return _db.Persons
+                    .Where(p => p.Email.Contains(searchString))
                     .Select(s => s.ToPersonResponse()).ToList();
             }
             case nameof(Person.Address):
             {
                 //is search string is not provided
-                if (searchString == null) return _persons.Select(p => p.ToPersonResponse()).ToList();
+                if (searchString == null)
+                    return _db.Persons
+                        .ToList()
+                        .Select(p => p.ToPersonResponse()).ToList();
 
                 //checking db for data with the searchString
-                return _persons.Where(p => p.Address.Contains(searchString))
-                    .Select(s => s.ToPersonResponse()).ToList();
+                var data = await _db.Persons
+                    .Where(p => p.Address.Contains(searchString))
+                    .ToListAsync();
+
+                return data.Select(e => e.ToPersonResponse()).ToList();
             }
             default:
             {
                 //return all person
-                return GetAllPerson();
+                return await GetAllPerson();
             }
         }
     }
 
-    public List<PersonResponse> GetSortedPersons(string sortedBy, SortedOrder sortedOrder = SortedOrder.ASC)
-    {
-        if (sortedBy == null) throw new ArgumentNullException();
-
-
-        var personsInSorted = _persons.OrderByDescending(p => p.Name)
-            .Select(p => p.ToPersonResponse())
-            .ToList();
-
-        return personsInSorted;
-    }
-
-    public PersonResponse UpdatePerson()
+    public async Task<PersonResponse> UpdatePerson()
     {
         throw new NotImplementedException();
     }
 
-    public Guid? DeletePerson(Guid id)
+    public async Task<Guid?> DeletePerson(Guid id)
     {
         throw new NotImplementedException();
     }

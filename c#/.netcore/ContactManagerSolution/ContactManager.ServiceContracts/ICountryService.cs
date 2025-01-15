@@ -4,13 +4,13 @@ namespace serviceContracts;
 
 public interface ICountryService
 {
-    CountryResponse AddCountry(CountryAddRequest countryAddRequest);
-    List<CountryResponse> GetAllCountry();
+    Task<CountryResponse> AddCountry(CountryAddRequest countryAddRequest);
+    Task<List<CountryResponse>> GetAllCountry();
 
-    /// <summary>
-    ///     It returns a country from db.
-    /// </summary>
-    /// <param name="id">Id (guid) to be searched</param>
-    /// <returns></returns>
-    CountryResponse? GetCountryById(Guid id);
+    /**
+     * It returns a country from db.
+     * <param name="id">Id (guid) to be searched</param>
+     * <returns></returns>
+     */
+    Task<CountryResponse?> GetCountryById(Guid id);
 }

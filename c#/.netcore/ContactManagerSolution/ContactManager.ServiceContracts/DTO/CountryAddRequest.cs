@@ -9,6 +9,6 @@ public class CountryAddRequest
     //this will create and return CountryEntity from country DTO
     public Country ToCountryEntity()
     {
-        return new Country { Id = Guid.NewGuid(), name = CountryName };
+        return new Country { Id = Guid.NewGuid(), Name = CountryName };
     }
 }

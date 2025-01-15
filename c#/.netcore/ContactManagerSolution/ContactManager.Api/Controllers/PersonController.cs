@@ -14,13 +14,13 @@ public class PersonController : Controller
     }
 
     [HttpGet("/get-all-person")]
-    public IActionResult GetAllPerson()
+    public async Task<IActionResult> GetAllPerson()
     {
-        return null;
+        return Json(await _personService.GetAllPerson());
     }
 
     [HttpPost("/add-person")]
-    public IActionResult AddPerson()
+    public async Task<IActionResult> AddPerson()
     {
         return null;
     }

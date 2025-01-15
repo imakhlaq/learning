@@ -8,17 +8,17 @@ namespace serviceContracts.DTO;
 public class CountryResponse
 {
     public string CountryName;
-    public Guid id { get; set; }
+    public Guid Id { get; set; }
 
     public CountryResponse CreateResponse(Country country)
     {
-        return new CountryResponse { id = country.Id, CountryName = country.name };
+        return new CountryResponse { Id = country.Id, CountryName = country.Name };
     }
 
     public override bool Equals(object? obj)
     {
         var countryResponse2 = (CountryResponse)obj;
-        return id == countryResponse2.id;
+        return Id == countryResponse2.Id;
     }
 }
 
@@ -28,6 +28,6 @@ public static class CountryExtensions
 {
     public static CountryResponse ToCountryResponse(this Country country)
     {
-        return new CountryResponse { id = country.Id, CountryName = country.name };
+        return new CountryResponse { Id = country.Id, CountryName = country.Name };
     }
 }

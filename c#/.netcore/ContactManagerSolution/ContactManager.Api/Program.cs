@@ -1,4 +1,4 @@
-using Entities.MyDbContext;
+using Entities.DbContext;
 using Microsoft.EntityFrameworkCore;
 using serviceContracts;
 using services;
@@ -7,11 +7,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews(); // registers controllers and views as Bean in IOC container
 
 //adding services to IOC
-builder.Services.AddSingleton<IPersonService, PersonService>();
-builder.Services.AddSingleton<ICountryService, CountriesService>();
+builder.Services.AddScoped<PersonService, PersonService>();
+builder.Services.AddScoped<ICountryService, CountriesService>();
+
+//you cant add scoped (DbContext) service in a singleton service
+//builder.Services.AddSingleton<ICountryService, CountriesService>();
 
 //adding Db context to IOC
-//now you can inject the DBContext in any bean manage by IOC to perform operations on ContactManager.Entities.
+//now you can inject the DBContext in any bean manage by IOC to perform operations on Entities
+//DBContext is a scoped service
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(options =>
 {
     var connectionString = builder.Configuration["ConnectionStrings:PostgresConnection"];

@@ -5,9 +5,9 @@ namespace serviceContracts;
 
 public interface IPersonService
 {
-    PersonResponse AddPerson(PersonAddRequest personAddRequest);
-    PersonResponse? GetPersonById(Guid id);
-    List<PersonResponse> GetAllPerson();
+    Task<PersonResponse> AddPerson(PersonAddRequest personAddRequest);
+    Task<PersonResponse?> GetPersonById(Guid id);
+    Task<List<PersonResponse>> GetAllPerson();
 
     /**
      * Testing summary
@@ -15,14 +15,14 @@ public interface IPersonService
      * <param name="searchString">Search string</param>
      * <returns></returns>
      */
-    List<PersonResponse> GetFilterPersons(string searchBy, string? searchString);
+    Task<List<PersonResponse>> GetFilterPersons(string searchBy, string? searchString);
 
-    List<PersonResponse> GetSortedPersons(string sortedBy, SortedOrder sortedOrder);
+    Task<List<PersonResponse>> GetSortedPersons(string sortedBy, SortedOrder sortedOrder);
 
-    PersonResponse UpdatePerson();
+    Task<PersonResponse> UpdatePerson();
 
     /**
      * <param name="id">Id of person you want to delete.</param>
      */
-    Guid? DeletePerson(Guid id);
+    Task<Guid?> DeletePerson(Guid id);
 }

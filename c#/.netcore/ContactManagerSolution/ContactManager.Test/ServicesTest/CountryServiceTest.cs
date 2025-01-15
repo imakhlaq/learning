@@ -8,11 +8,12 @@ namespace test;
 public class CountryServiceTest
 {
     private readonly ICountryService _countryService;
-    private readonly ITestOutputHelper _testOutputHelper; //to write output in the test windows
+    private readonly ITestOutputHelper _testOutputHelper; //to write output in the test window
+
 
     public CountryServiceTest(ITestOutputHelper testOutputHelper)
     {
-        _countryService = new CountriesService();
+        _countryService = new CountriesService(null);
         _testOutputHelper = testOutputHelper;
 
 
@@ -22,14 +23,14 @@ public class CountryServiceTest
 
     //when CountryAddRequest is null, it should throw ArgumentNullException
     [Fact]
-    public void TestAddCountry_CountryAddRequestIsNull()
+    public async Task TestAddCountry_CountryAddRequestIsNull()
     {
         //arrange
         CountryAddRequest? countryAddRequest = null;
 
 
         //assert
-        Assert.Throws<ArgumentNullException>(() =>
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
         {
             //act
             return _countryService.AddCountry(countryAddRequest);
@@ -40,11 +41,11 @@ public class CountryServiceTest
     //when the CountryName is null, it should throw ArgumentException
 
     [Fact]
-    public void TestAddCountry_CountryNameIsNull()
+    public async Task TestAddCountry_CountryNameIsNull()
     {
         var country = new CountryAddRequest();
 
-        Assert.Throws<ArgumentException>(() => { _countryService.AddCountry(country); });
+        await Assert.ThrowsAsync<ArgumentException>(() => _countryService.AddCountry(country));
     }
 
     //when the CountryName already exits in the db, it should throw ArgumentException
@@ -64,19 +65,19 @@ public class CountryServiceTest
 
     //when you supply proper arguments it should return CountryResponse
     [Fact]
-    public void TestAddCountry_SuccessResult()
+    public async Task TestAddCountry_SuccessResult()
     {
         var country = new CountryAddRequest { CountryName = "India" };
 
-        var res = _countryService.AddCountry(country);
+        var res = await _countryService.AddCountry(country);
 
         //checking country id is generated
-        Assert.True(res.id != Guid.Empty);
+        Assert.True(res.Id != Guid.Empty);
     }
 
 
     [Fact]
-    public void TestGetAllCountry_ByAddingCountry()
+    public async Task TestGetAllCountry_ByAddingCountry()
     {
         List<CountryAddRequest> countryAddRequests = new()
         {
@@ -87,10 +88,10 @@ public class CountryServiceTest
         List<CountryResponse> countryResponses = new();
 
         //adding countries
-        foreach (var request in countryAddRequests) countryResponses.Add(_countryService.AddCountry(request));
+        foreach (var request in countryAddRequests) countryResponses.Add(await _countryService.AddCountry(request));
 
         //getting all countries
-        var resList = _countryService.GetAllCountry();
+        var resList = await _countryService.GetAllCountry();
 
         foreach (var response in resList)
             //contains calls Equal(Object obj) to check equality, override equal mehtod
@@ -98,9 +99,9 @@ public class CountryServiceTest
     }
 
     [Fact]
-    public void TestGetAllCountry()
+    public async Task TestGetAllCountry()
     {
-        var countryResponses = _countryService.GetAllCountry();
+        var countryResponses = await _countryService.GetAllCountry();
 
         Assert.NotNull(countryResponses);
     }
@@ -108,18 +109,18 @@ public class CountryServiceTest
     #region GetCountryById
 
     [Fact]
-    public void TestGetCountryById_IdIsNull()
+    public async Task TestGetCountryById_IdIsNull()
     {
-        Assert.Throws<ArgumentNullException>(() => _countryService.GetCountryById(Guid.Empty));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _countryService.GetCountryById(Guid.Empty));
     }
 
     [Fact]
-    public void TestGetCountryById_IdIsNotNull()
+    public async Task TestGetCountryById_IdIsNotNull()
     {
         var country = new CountryAddRequest { CountryName = "India" };
-        var addCountryRes = _countryService.AddCountry(country);
+        var addCountryRes = await _countryService.AddCountry(country);
 
-        var getByIdRes = _countryService.GetCountryById(addCountryRes.id);
+        var getByIdRes = await _countryService.GetCountryById(addCountryRes.Id);
 
         //to check the equality it calls the Equals() method
         Assert.Equal(addCountryRes, getByIdRes);

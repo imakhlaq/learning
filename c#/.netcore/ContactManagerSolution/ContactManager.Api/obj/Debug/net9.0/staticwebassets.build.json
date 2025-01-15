@@ -1,48 +1,48 @@
 {
   "Version": 1,
-  "Hash": "VRYgel0kwY/4wFxHOLQPMfkh6h5x3vT42nkIVroeALU=",
-  "Source": "contactmanager",
-  "BasePath": "_content/contactmanager",
+  "Hash": "kpz281x4tOvtEyFIzlaMGd2FxLsQxg8jAz6Bohaeszo=",
+  "Source": "ContactManager.Api",
+  "BasePath": "_content/ContactManager.Api",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [
     {
-      "Name": "contactmanager\\wwwroot",
-      "Source": "contactmanager",
-      "ContentRoot": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\wwwroot\\",
-      "BasePath": "_content/contactmanager",
+      "Name": "ContactManager.Api\\wwwroot",
+      "Source": "ContactManager.Api",
+      "ContentRoot": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\wwwroot\\",
+      "BasePath": "_content/ContactManager.Api",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\obj\\Debug\\net9.0\\compressed\\9w86xfqnfr-5ipweew5fc.gz",
-      "SourceId": "contactmanager",
+      "Identity": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\obj\\Debug\\net9.0\\compressed\\b3ytn3cfi0-5ipweew5fc.gz",
+      "SourceId": "ContactManager.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\obj\\Debug\\net9.0\\compressed\\",
-      "BasePath": "_content/contactmanager",
+      "ContentRoot": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/ContactManager.Api",
       "RelativePath": "style#[.{fingerprint=5ipweew5fc}]?.css.gz",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Alternative",
       "AssetMergeBehavior": "",
       "AssetMergeSource": "",
-      "RelatedAsset": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\wwwroot\\style.css",
+      "RelatedAsset": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\wwwroot\\style.css",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
       "Fingerprint": "5ipweew5fc",
       "Integrity": "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\wwwroot\\style.css"
+      "OriginalItemSpec": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\wwwroot\\style.css"
     },
     {
-      "Identity": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\wwwroot\\style.css",
-      "SourceId": "contactmanager",
+      "Identity": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\wwwroot\\style.css",
+      "SourceId": "ContactManager.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\wwwroot\\",
-      "BasePath": "_content/contactmanager",
+      "ContentRoot": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\wwwroot\\",
+      "BasePath": "_content/ContactManager.Api",
       "RelativePath": "style#[.{fingerprint}]?.css",
       "AssetKind": "All",
       "AssetMode": "All",
@@ -62,7 +62,7 @@
   "Endpoints": [
     {
       "Route": "style.5ipweew5fc.css",
-      "AssetFile": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\obj\\Debug\\net9.0\\compressed\\9w86xfqnfr-5ipweew5fc.gz",
+      "AssetFile": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\obj\\Debug\\net9.0\\compressed\\b3ytn3cfi0-5ipweew5fc.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
@@ -125,7 +125,7 @@
     },
     {
       "Route": "style.5ipweew5fc.css",
-      "AssetFile": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\wwwroot\\style.css",
+      "AssetFile": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\wwwroot\\style.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -170,7 +170,7 @@
     },
     {
       "Route": "style.5ipweew5fc.css.gz",
-      "AssetFile": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\obj\\Debug\\net9.0\\compressed\\9w86xfqnfr-5ipweew5fc.gz",
+      "AssetFile": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\obj\\Debug\\net9.0\\compressed\\b3ytn3cfi0-5ipweew5fc.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -223,7 +223,7 @@
     },
     {
       "Route": "style.css",
-      "AssetFile": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\obj\\Debug\\net9.0\\compressed\\9w86xfqnfr-5ipweew5fc.gz",
+      "AssetFile": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\obj\\Debug\\net9.0\\compressed\\b3ytn3cfi0-5ipweew5fc.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
@@ -278,7 +278,7 @@
     },
     {
       "Route": "style.css",
-      "AssetFile": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\wwwroot\\style.css",
+      "AssetFile": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\wwwroot\\style.css",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -315,7 +315,7 @@
     },
     {
       "Route": "style.css.gz",
-      "AssetFile": "F:\\dev\\learning\\c#\\.netcore\\contactmanager\\contactmanager\\obj\\Debug\\net9.0\\compressed\\9w86xfqnfr-5ipweew5fc.gz",
+      "AssetFile": "F:\\dev\\learning\\c#\\.netcore\\ContactManagerSolution\\ContactManager.Api\\obj\\Debug\\net9.0\\compressed\\b3ytn3cfi0-5ipweew5fc.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
