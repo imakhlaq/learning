@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>services</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ContactManager.Entities\ContactManager.Entities.csproj"/>
+        <ProjectReference Include="..\ContactManager.ServiceContracts\ContactManager.ServiceContracts.csproj"/>
+    </ItemGroup>
+
+</Project>
