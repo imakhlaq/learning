@@ -1,12 +1,12 @@
-﻿using Entities;
-using Entities.DbContext;
+﻿using ContactManager.Entities;
+using ContactManager.Entities.AppDbContext;
+using ContactManager.ServiceContracts;
+using ContactManager.ServiceContracts.DTO;
+using ContactManager.ServiceContracts.Enums;
+using ContactManager.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
-using serviceContracts;
-using serviceContracts.DTO;
-using Services.Enums;
-using services.Helpers;
 
-namespace services;
+namespace ContactManager.Services;
 
 public class PersonService : IPersonService
 {
@@ -15,22 +15,6 @@ public class PersonService : IPersonService
     public PersonService(AppDbContext context)
     {
         _db = context;
-    }
-
-    public async Task<List<PersonResponse>> GetSortedPersons(string sortedBy, SortedOrder sortedOrder = SortedOrder.ASC)
-    {
-        if (sortedBy == null) throw new ArgumentNullException();
-
-
-        var personsInSorted = await _db.Persons
-            .OrderByDescending(p => p.Name)
-            .ToListAsync();
-
-        var mapToRes = personsInSorted
-            .Select(e => e.ToPersonResponse())
-            .ToList();
-
-        return mapToRes;
     }
 
 
@@ -155,5 +139,21 @@ public class PersonService : IPersonService
     public async Task<Guid?> DeletePerson(Guid id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<List<PersonResponse>> GetSortedPersons(string sortedBy, SortedOrder sortedOrder = SortedOrder.ASC)
+    {
+        if (sortedBy == null) throw new ArgumentNullException();
+
+
+        var personsInSorted = await _db.Persons
+            .OrderByDescending(p => p.Name)
+            .ToListAsync();
+
+        var mapToRes = personsInSorted
+            .Select(e => e.ToPersonResponse())
+            .ToList();
+
+        return mapToRes;
     }
 }

@@ -1,7 +1,7 @@
-﻿using serviceContracts.DTO;
-using Services.Enums;
+﻿using ContactManager.ServiceContracts.DTO;
+using ContactManager.ServiceContracts.Enums;
 
-namespace serviceContracts;
+namespace ContactManager.ServiceContracts;
 
 public interface IPersonService
 {

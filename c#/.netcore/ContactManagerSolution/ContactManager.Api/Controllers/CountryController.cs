@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ContactManager.ServiceContracts;
+using Microsoft.AspNetCore.Mvc;
 using serviceContracts;
 
-namespace contactmanager.Controllers;
+namespace ContactManager.Api.Controllers;
 
 [Controller]
 [Route("/api/v1/country")]

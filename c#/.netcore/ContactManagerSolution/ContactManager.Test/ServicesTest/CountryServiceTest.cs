@@ -1,6 +1,6 @@
-﻿using serviceContracts;
-using serviceContracts.DTO;
-using services;
+﻿using ContactManager.ServiceContracts;
+using ContactManager.ServiceContracts.DTO;
+using ContactManager.Services;
 using Xunit.Abstractions;
 
 namespace test;

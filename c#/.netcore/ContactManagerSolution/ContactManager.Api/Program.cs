@@ -1,7 +1,8 @@
-using Entities.DbContext;
+
+using ContactManager.Entities.AppDbContext;
+using ContactManager.ServiceContracts;
+using ContactManager.Services;
 using Microsoft.EntityFrameworkCore;
-using serviceContracts;
-using services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews(); // registers controllers and views as Bean in IOC container

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace serviceContracts.DTO;
+namespace ContactManager.ServiceContracts.DTO;
 
 public class PersonAddRequest
 {

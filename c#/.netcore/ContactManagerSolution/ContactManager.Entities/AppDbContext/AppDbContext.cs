@@ -1,9 +1,9 @@
 ﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
-namespace Entities.DbContext;
+namespace ContactManager.Entities.AppDbContext;
 
-public class AppDbContext : Microsoft.EntityFrameworkCore.DbContext
+public class AppDbContext : DbContext
 {
     //options supplied while adding db context to IOC
     public AppDbContext(DbContextOptions options) : base(options)

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace services.Helpers;
+namespace ContactManager.Services.Helpers;
 
 public static class ValidatorHelper
 {

@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
-        <RootNamespace>contactmanagertest</RootNamespace>
+        <RootNamespace>ContactManager.Test</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

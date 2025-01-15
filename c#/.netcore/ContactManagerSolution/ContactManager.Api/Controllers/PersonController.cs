@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using serviceContracts;
+﻿using ContactManager.ServiceContracts;
+using Microsoft.AspNetCore.Mvc;
 
-namespace contactmanager.Controllers;
+namespace ContactManager.Api.Controllers;
 
 [Controller]
 public class PersonController : Controller
@@ -25,3 +25,4 @@ public class PersonController : Controller
         return null;
     }
 }
+

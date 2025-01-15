@@ -1,6 +1,6 @@
-﻿using serviceContracts.DTO;
+﻿using ContactManager.ServiceContracts.DTO;
 
-namespace serviceContracts;
+namespace ContactManager.ServiceContracts;
 
 public interface ICountryService
 {

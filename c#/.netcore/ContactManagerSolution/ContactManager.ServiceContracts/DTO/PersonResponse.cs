@@ -1,6 +1,6 @@
-﻿using Entities;
+﻿using ContactManager.Entities;
 
-namespace serviceContracts.DTO;
+namespace ContactManager.ServiceContracts.DTO;
 
 public class PersonResponse
 {

@@ -1,9 +1,9 @@
-﻿using Entities.DbContext;
+﻿using ContactManager.Entities.AppDbContext;
+using ContactManager.ServiceContracts;
+using ContactManager.ServiceContracts.DTO;
 using Microsoft.EntityFrameworkCore;
-using serviceContracts;
-using serviceContracts.DTO;
 
-namespace services;
+namespace ContactManager.Services;
 
 public class CountriesService : ICountryService
 {
@@ -25,7 +25,7 @@ public class CountriesService : ICountryService
         var countryFromReq = countryAddRequest.ToCountryEntity();
 
         //checking if country already exists
-        var isCountryExist = _db.Countries.Any(country => country.Name == countryFromReq.Name);
+        var isCountryExist = await _db.Countries.AnyAsync(country => country.Name == countryFromReq.Name);
 
         if (isCountryExist) throw new ArgumentException();
 
@@ -33,7 +33,6 @@ public class CountriesService : ICountryService
 
         //Add country to db
         await _db.Countries.AddAsync(countryFromReq);
-
 
         await _db.SaveChangesAsync(); // to commit the changes;
 
@@ -47,7 +46,8 @@ public class CountriesService : ICountryService
             .ToListAsync();
 
         //converting all counties entities to country response
-        var allCountryToResponse = allCountries.Select(c => c.ToCountryResponse()).ToList();
+        var allCountryToResponse = allCountries
+            .Select(c => c.ToCountryResponse()).ToList();
 
 
         return allCountryToResponse;
