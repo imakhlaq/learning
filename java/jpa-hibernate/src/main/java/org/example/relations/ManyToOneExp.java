@@ -9,7 +9,7 @@ import java.util.UUID;
 public class ManyToOneExp {
 }
 
-// uni-directional OneToMany
+// uni-directional ManyToOne
 @Entity
 @Table(name = "comments")
 class Comments {

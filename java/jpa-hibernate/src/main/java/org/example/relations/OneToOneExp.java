@@ -30,7 +30,7 @@ class User {
 
 }
 
-//bi-directional one-to-one relationship
+// bi-directional one-to-one relationship
 @Entity
 class AccountBi {
 
