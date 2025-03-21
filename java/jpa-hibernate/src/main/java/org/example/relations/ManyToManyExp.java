@@ -34,6 +34,7 @@ class Category {
     private List<Movie> movies;
 }
 
+// bi-directional OneToMany
 @Entity
 @Table(name = "movie")
 class MovieBi {
@@ -41,9 +42,15 @@ class MovieBi {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String title;
+
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinTable(
+        joinColumns = @JoinColumn(name = "movie-id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "category-id", referencedColumnName = "id")
+    )
+    private List<CategoryBi> categories;
 }
 
-// bi-directional OneToMany
 @Entity
 @Table(name = "category")
 class CategoryBi {
@@ -52,6 +59,6 @@ class CategoryBi {
     private UUID id;
     private String name;
 
-    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "categories")
     private List<Movie> movies;
 }
