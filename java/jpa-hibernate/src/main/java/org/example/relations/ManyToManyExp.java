@@ -8,7 +8,7 @@ import java.util.UUID;
 public class ManyToManyExp {
 }
 
-// uni-directional OneToMany
+// uni-directional ManyToMany
 @Entity
 @Table(name = "movie")
 class Movie {
@@ -34,7 +34,7 @@ class Category {
     private List<Movie> movies;
 }
 
-// bi-directional OneToMany
+// bi-directional ManyToMany
 @Entity
 @Table(name = "movie")
 class MovieBi {

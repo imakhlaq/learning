@@ -24,6 +24,9 @@ class student {
     private String id;
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "classroom-id", referencedColumnName = "id")
+    private classRoom room;
 }
 
 // bi-directional OneToMany
