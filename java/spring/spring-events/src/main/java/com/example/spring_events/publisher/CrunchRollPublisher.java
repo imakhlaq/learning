@@ -1,6 +1,6 @@
-package com.example.springevents.publisher;
+package com.example.spring_events.publisher;
 
-import com.example.springevents.events.SoloLevelingEvent;
+import com.example.spring_events.events.SoloLevelingEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -14,6 +14,6 @@ public class CrunchRollPublisher {
     public void streamingSoloLeveling(String epNo) {
         System.out.println("CrunchRoll : Streaming Solo Leveling " + epNo);
 
-        publisher.publishEvent(new SoloLevelingEvent(this, "12"));
+        publisher.publishEvent(new SoloLevelingEvent(epNo));
     }
 }
