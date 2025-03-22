@@ -3,8 +3,10 @@ package com.example;
 import com.example.spring_events.publisher.CrunchRollPublisher;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
+@EnableAsync //<- enabling async methods and Listeners
 public class SpringEventsApplication {
 
     public static void main(String[] args) {
