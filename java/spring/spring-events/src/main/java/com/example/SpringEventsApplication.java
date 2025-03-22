@@ -6,11 +6,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+import java.util.concurrent.ExecutionException;
+
 @SpringBootApplication
 @EnableAsync //<- enabling async methods and Listeners
 public class SpringEventsApplication {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
         var context = SpringApplication.run(SpringEventsApplication.class, args);
 
         var publisher = context.getBean(CrunchRollPublisher.class);
@@ -21,6 +23,7 @@ public class SpringEventsApplication {
         //async methods
         var asyncMethod = context.getBean(AsyncExample.class);
         asyncMethod.process();
+        asyncMethod.processAsyncWithCompletableFuture();
 
     }
 }

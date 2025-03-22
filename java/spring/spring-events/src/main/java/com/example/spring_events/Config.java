@@ -7,6 +7,8 @@ import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 /**
+ * TODO When use SimpleAsyncTaskExecutor thread pool, your app can not thread reuse.
+ * <p>
  * By default, the listeners are processed synchronously to make them work Async.
  * We have to create a bean of ApplicationEventMulticaster and set executor to SimpleAsyncTaskExecutor
  * <p>
