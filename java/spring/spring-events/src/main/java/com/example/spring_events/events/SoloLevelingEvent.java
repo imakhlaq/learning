@@ -7,7 +7,7 @@ public class SoloLevelingEvent {
     public SoloLevelingEvent(String epNo) {
         this.epNo = epNo;
     }
-
+    
     public String getEpNo() {
         return epNo;
     }

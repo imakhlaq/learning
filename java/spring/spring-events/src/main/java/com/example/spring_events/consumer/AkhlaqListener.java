@@ -14,7 +14,8 @@ public class AkhlaqListener {
     }
 
     @Async
-    @EventListener //---------------| type of event you are listening for
+    @EventListener
+    //----------------------------| type of event you are listening for
     public void onHorrorEvent(SoloLevelingEvent event) {
         System.out.println("Akhlaq is watching solo leveling episode " + event.getEpNo());
     }
