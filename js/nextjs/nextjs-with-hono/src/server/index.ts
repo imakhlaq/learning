@@ -1,6 +1,7 @@
 import {OpenAPIHono, createRoute, z} from '@hono/zod-openapi';
 import {ContextVariables} from "@/server/types";
 import {cors} from 'hono/cors'
+import {apiReference} from "@scalar/hono-api-reference";
 
 //you can validate values and types using Zod and generate OpenAPI Swagger documentation
 const app = new OpenAPIHono<{ Variables: ContextVariables }>({
@@ -30,12 +31,59 @@ app.use("/api/*", cors(
         credentials: true,
     }))
 
-// The OpenAPI documentation will be available at /doc
-app.doc31('/docs', {openapi: '3.1.0', info: {title: 'foo', version: '1'}}) // new endpoint
-app.getOpenAPI31Document({
+app.use(async (c, next) => {
+    c.set('db', "");//set the db instance
+
+    /*   const sessionId = getCookie(c, lucia.sessionCookieName);
+
+        if (!sessionId) {
+            c.set('user', null);
+            c.set('session', null);
+            return next();
+        }
+
+        const { session, user } = await lucia.validateSession(sessionId);
+
+        if (session && session.fresh) {
+            const sessionCookie = lucia.createSessionCookie(session.id);
+            setCookie(c, lucia.sessionCookieName, sessionCookie.serialize(), {
+                ...sessionCookie.attributes,
+                sameSite: 'Strict',
+            });
+        }
+
+        if (!session) {
+            const sessionCookie = lucia.createBlankSessionCookie();
+            setCookie(c, lucia.sessionCookieName, sessionCookie.serialize(), {
+                ...sessionCookie.attributes,
+                sameSite: 'Strict',
+            });
+        }
+
+        c.set('user', user);
+        c.set('session', session);
+        return next();*/
+});
+
+app.doc31('/api/swagger.json', {
     openapi: '3.1.0',
-    info: {title: 'foo', version: '1'},
-})
+    info: {title: 'Hono x Lucia', version: '1.0.0'},
+});
+
+// The OpenAPI documentation will be available at /doc
+app.doc31('/api/swagger.json', {
+    openapi: '3.1.0',
+    info: {title: 'Hono x Lucia', version: '1.0.0'},
+});
+
+app.get(
+    '/api/scalar',
+    apiReference({
+        spec: {
+            url: '/api/swagger.json',
+        },
+    })
+);
 
 const userRoutes = createRoute({
     method: 'post',
