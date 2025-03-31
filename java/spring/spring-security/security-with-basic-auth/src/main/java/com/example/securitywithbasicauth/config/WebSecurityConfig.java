@@ -1,38 +1,110 @@
 package com.example.securitywithbasicauth.config;
 
+import com.example.securitywithbasicauth.config.security.filter.ApiKeyFilter;
+import jakarta.servlet.DispatcherType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@PreAuthorize @PostAuthorize @PreFilter @PostFilter
 public class WebSecurityConfig {
 
-    //this bean is used by spring security to get the user details from the database
-    //when u UserDetailsService then spring will not provide default id and password to login
+    private String apiKey = "dadadadadadadad";
+    private final AuthenticationManager authenticationManager;
+
     @Bean
-    public UserDetailsService userDetailsService() {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        // to store the user details in memory
-        var uds = new InMemoryUserDetailsManager();
+        //build in Auth provider
+        http
+            .httpBasic(Customizer.withDefaults());
 
-        var u1 = User.withUsername("bill")
-            .password("123")
-            .authorities("read")
-            .build();
+        //add customAuthFilter in place of UsernamePasswordAuthenticationFilter
+//        http
+//            .addFilterAt(customAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        uds.createUser(u1);
-        return uds;
+        //
+        http
+            .addFilterBefore(new ApiKeyFilter(apiKey, authenticationManager), BasicAuthenticationFilter.class);
+
+        //setting the public and protected routes
+        http
+            .authorizeHttpRequests(auth -> {
+
+                //for streamingResponseBody
+                auth.dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll();
+
+                //these are whitelist paths
+                auth.requestMatchers("/", "/hello").permitAll();
+
+                //no one can access this endpoint
+                auth.requestMatchers("/idk").denyAll();
+
+                //only authenticated users can access these
+                auth.requestMatchers("/api/upload", "/api/myfiles", "/api/download")
+                    .authenticated();
+
+                // authenticated user with read authority can access these
+                auth.requestMatchers("/api/huad", "/api/dee", "/api/huu")
+                    .hasAuthority("read");
+
+                // authenticated user with read or write or piss  authority can access these
+                auth.requestMatchers("/api/huad", "/api/maneedadr", "/api/huu")
+                    .hasAnyAuthority("read", "write", "piss");
+
+                /// authenticated user with ADMIN role
+                //roles("ADMIN") method  will prefix role with ROLE_ADMIN
+                //or authorities("ROLE_ADMIN")
+                auth.requestMatchers("/api/admin", "/api/huu")
+                    .hasRole("ADMIN");
+
+                // authenticated user with ADMIN or MANAGER role
+                auth.requestMatchers("/api/manager", "/daeakd/dad")
+                    .hasAnyRole("ADMIN", "MANAGER");
+
+                //you can mix and match the hasAnyRole() and hasAuthority)
+                auth.requestMatchers("/zerbta")
+                    .hasAnyRole("ADMIN", "MANAGER");
+                auth.requestMatchers("/zerbta")
+                    .hasAnyAuthority("read", "write");
+
+                auth.requestMatchers("/delete")
+                    .hasAnyRole("ADMIN", "MANAGER");
+                auth.requestMatchers("/delete")
+                    .hasAnyAuthority("delete");
+
+                //access() using this you can write SpEL logic and even call beans methods its powerful
+//                auth.anyRequest()
+//                    .access()
+
+            });
+
+        return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         //encoder that doesn't encode the password
         return NoOpPasswordEncoder.getInstance();
+    }
+
+    //storing the authentication manager in the context
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
