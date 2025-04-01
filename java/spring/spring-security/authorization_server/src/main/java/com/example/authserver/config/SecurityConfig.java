@@ -86,7 +86,8 @@ public class SecurityConfig {
         return http.build();
     }
 
-    //this represents one user that is registered with the auth server
+/* REMOVED because we added the UserDetailsService as bean
+  //this represents one user that is registered with the auth server
     @Bean
     public UserDetailsService userDetailsService() {
 
@@ -97,14 +98,14 @@ public class SecurityConfig {
             .build();
 
         return new InMemoryUserDetailsManager(u1);
-    }
+    }*/
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    //this represents one client that is registered with the auth server
+/*    //this represents one client that is registered with the auth server
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
         var r1 = RegisteredClient
@@ -127,7 +128,7 @@ public class SecurityConfig {
             .build();
 
         return new InMemoryRegisteredClientRepository(r1);
-    }
+    }*/
 
     //using this you can change the default auth server endpoint
     @Bean

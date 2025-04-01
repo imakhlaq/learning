@@ -1,8 +1,7 @@
-package com.example.authserver.entiti;
+package com.example.authserver.entity;
 
-import com.example.authserver.entiti.security.Authority;
+import com.example.authserver.service.SecurityAuthority;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,9 +21,10 @@ public class User {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        joinColumns = @JoinColumn(name = "authority_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
+        name = "user_authorities",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "authority_id")
     )
-    private Set<Authority> authority;
+    private Set<Authority> authorities;
 
 }

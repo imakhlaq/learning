@@ -1,11 +1,14 @@
-package com.example.authserver.entiti.security;
+package com.example.authserver.entity;
 
-import com.example.authserver.entiti.User;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 public class Authority {
 
     @Id
@@ -13,6 +16,6 @@ public class Authority {
     private Long id;
     private String authority;
 
-    @ManyToMany(mappedBy = "authority")
+    @ManyToMany(mappedBy = "authorities")
     private Set<User> users;
 }
