@@ -6,6 +6,11 @@ import lombok.Setter;
 
 import java.util.Set;
 
+/*
+Diff between the scopes and authorities
+scopes is for client
+authorities is for users
+ */
 @Entity
 @Getter
 @Setter

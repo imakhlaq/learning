@@ -9,16 +9,17 @@ import lombok.Setter;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 
-import java.util.Optional;
+import java.time.Duration;
 
 @Entity
 @Setter
 @Getter
 public class Client {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     private String clientId;
     private String clientSecret;
@@ -34,26 +35,26 @@ public class Client {
     //convert RegisteredClient to client
     public static Client from(RegisteredClient registeredClient) {
 
-        var client = new Client();
+        var NewClient = new Client();
 
-        client.setClientId(registeredClient.getClientId());
-        client.setClientSecret(registeredClient.getClientSecret());
+        NewClient.setClientId(registeredClient.getClientId());
+        NewClient.setClientSecret(registeredClient.getClientSecret());
 
-        client.setRedirectUri(
+        NewClient.setRedirectUri(
             registeredClient
                 .getRedirectUris()
                 .stream()
                 .findFirst().orElse(null)
         );
 
-        client.setScope(
+        NewClient.setScope(
             registeredClient
                 .getScopes()
                 .stream()
                 .findFirst().orElse(null)
         );
 
-        client.setAuthMethod(
+        NewClient.setAuthMethod(
             registeredClient
                 .getClientAuthenticationMethods()
                 .stream()
@@ -62,7 +63,7 @@ public class Client {
                 .getValue()
         );
 
-        client.setGrantType(
+        NewClient.setGrantType(
             registeredClient
                 .getAuthorizationGrantTypes()
                 .stream()
@@ -71,19 +72,24 @@ public class Client {
                 .getValue()
         );
 
-        return client;
+        return NewClient;
     }
 
     public static RegisteredClient from(Client client) {
 
         return RegisteredClient
-            .withId(String.valueOf(client.getId()))
+            .withId(client.getId())
             .clientId(client.getClientId())
             .clientSecret(client.getClientSecret())
             .redirectUri(client.getRedirectUri())
             .scope(client.getScope())
             .clientAuthenticationMethod(new ClientAuthenticationMethod(client.getAuthMethod()))
             .authorizationGrantType(new AuthorizationGrantType(client.getGrantType()))
+            .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)//to have refresh token
+            .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)//if client is another service
+            .tokenSettings(TokenSettings.builder()
+                .accessTokenTimeToLive(Duration.ofSeconds(5000))
+                .build())
             .build();
     }
 }
