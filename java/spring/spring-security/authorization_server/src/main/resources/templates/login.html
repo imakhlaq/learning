@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <title>Welcome Back! - Ticketed</title>
+</head>
+<body>
+<div class="split-container">
+    <div class="left-side">
+        <div class="logo">Spring Authorization Server</div>
+        <div class="hero-text">
+            Go from 0-90,<br>
+            Your almost at prod!
+        </div>
+        <img class="mountains" th:src="@{/images/mountains.jpg}" alt="mountains"/>
+    </div>
+    <div class="right-side">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>Welcome Back!</h1>
+                <p>Continue with Google or enter your details.</p>
+            </div>
+            <a href="/oauth2/authorization/google" role="link" class="google-sign-in">
+                Login with Google
+            </a>
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Email</label>
+                    <input
+                        type="email"
+                        id="username"
+                        name="username"
+                        placeholder="example@gmail.com"
+                        required
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-container">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="••••••"
+                            required
+                        >
+                    </div>
+                </div>
+                <div th:if="${param.error}" class="alert-error">
+                    <!-- an svg is here -->
+                    The combination of email and password is incorrect!
+                </div>
+                <button type="submit" class="login-button">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+      function togglePassword () {
+        const eyeSlashed = document.getElementById('eye-slashed')
+        eyeSlashed.classList.toggle('hidden')
+        const eye = document.getElementById('eye')
+        eye.classList.toggle('hidden')
+
+        const passwordInput = document.getElementById('password')
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text'
+        } else {
+          passwordInput.type = 'password'
+        }
+      }
+    </script>
+</div>
+</body>
+</html>

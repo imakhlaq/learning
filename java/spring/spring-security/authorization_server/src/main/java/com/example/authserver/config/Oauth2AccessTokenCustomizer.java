@@ -1,9 +1,13 @@
 package com.example.authserver.config;
 
+import com.example.authserver.entity.User;
 import com.example.authserver.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
@@ -18,31 +22,34 @@ import java.util.stream.Collectors;
 @Component
 public class Oauth2AccessTokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
 
+    // Here we are using the in memory user details service, but this could be any user service/repository
+    private final UserDetailsService userService;
+
     @Override
     public void customize(JwtEncodingContext context) {
 
         if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
-
-            var authorities = context
-                .getPrincipal()
-                .getAuthorities();
-
-            //adding user authorities to the JWT
-            context
-                .getClaims()
-                .claim("authorities", authorities  //changing the authorities object to List
-                    .stream()
-                    .map(GrantedAuthority::getAuthority).toList());
-
             context.getClaims().claims(claims -> {
                 Object principal = context.getPrincipal().getPrincipal();
-                SecurityUser user = (SecurityUser) principal;
 
-                Set<String> roles = AuthorityUtils.authorityListToSet(user
-                        .getAuthorities())
-                    .stream()
-                    .map(c -> c.replaceFirst("^ROLE_", ""))
+                // STARTS HERE
+                SecurityUser user = null;
+
+                if (principal instanceof UserDetails) { // form login
+                    user = (SecurityUser) principal;
+                } else if (principal instanceof DefaultOidcUser oidcUser) { // oauth2 login
+                    // fetch user by email to obtain User object when principal is not already a User object
+                    String email = oidcUser.getEmail();
+                    user = (SecurityUser) userService.loadUserByUsername(email);
+                }
+
+                if (user == null) return;
+                // ENDS HERE
+
+                Set<String> roles = AuthorityUtils.authorityListToSet(user.getAuthorities())
+                    .stream().map(c -> c.replaceFirst("^ROLE_", ""))
                     .collect(Collectors.collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet));
+
                 claims.put("roles", roles);
 
                 // I have only added the roles to the JWT here as I am using the limited fields

@@ -32,14 +32,14 @@ public final class PublicClientRefreshTokenAuthenticationProvider implements Aut
         // implementation is taken from PublicClientAuthenticationProvider
         // ---> removed the PKCE requirement
 
-        OAuth2ClientAuthenticationToken clientAuthentication = (OAuth2ClientAuthenticationToken) authentication;
+        var clientAuthentication = (OAuth2ClientAuthenticationToken) authentication;
 
         if (!ClientAuthenticationMethod.NONE.equals(clientAuthentication.getClientAuthenticationMethod())) {
             return null;
         }
 
-        String clientId = clientAuthentication.getPrincipal().toString();
-        RegisteredClient registeredClient = this.registeredClientRepository.findByClientId(clientId);
+        var clientId = clientAuthentication.getPrincipal().toString();
+        var registeredClient = this.registeredClientRepository.findByClientId(clientId);
         if (registeredClient == null) {
             throwInvalidClient(OAuth2ParameterNames.CLIENT_ID);
         }

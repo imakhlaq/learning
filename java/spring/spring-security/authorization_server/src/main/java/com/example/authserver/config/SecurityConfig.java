@@ -1,5 +1,6 @@
 package com.example.authserver.config;
 
+import com.example.authserver.config.social.*;
 import com.example.authserver.service.RegisteredClientRepositoryImpl;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -13,21 +14,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.OAuth2Token;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationProvider;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
-import org.springframework.security.oauth2.server.authorization.token.JwtGenerator;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -97,9 +89,6 @@ public class SecurityConfig {
                     )
             );
 
-        http
-            .cors(Customizer.withDefaults());
-
         return http.build();
     }
 
@@ -109,13 +98,31 @@ public class SecurityConfig {
     public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            .formLogin(Customizer.withDefaults()) // Enable form login
-            .authorizeHttpRequests(authorizeRequests -> {
-                authorizeRequests.anyRequest().authenticated();
-            });
+            .cors(Customizer.withDefaults())
+            .formLogin(formLogin -> formLogin.loginPage("/login").permitAll()) // Enable form login
+            .oauth2Login(oauth2Login -> oauth2Login
+
+                .userInfoEndpoint(userInfo -> userInfo
+                    .userService(new CustomOAuth2UserService()) //after oauth login customize the object
+                )
+                .successHandler(new OAuthAuthenticationSuccessHandler(this.userRepo))
+                .failureHandler(new OauthAuthenticationFailureHandler())
+
+                .loginPage("/login").permitAll()) // Enable oauth2 federated identity login
+            .authorizeHttpRequests(authorize ->
+                authorize
+                    .requestMatchers("/webjars/**", "/images/**", "/css/**",
+                        "/assets/**", "/favicon.ico", "/h2-console/**", "/swagger-ui/**", "/v3/**", "/oauth2/**")
+                    .permitAll()
+                    .anyRequest().authenticated()
+            );
 
         http
-            .oauth2Login(Customizer.withDefaults()); // Enable oauth2 federated identity login
+            .exceptionHandling(exception ->
+                exception
+                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint(this.logInURl))
+                    .accessDeniedHandler(new CustomAccessDeniedHandler(this.logInURl))
+            );
 
         return http.build();
     }
@@ -173,18 +180,6 @@ public class SecurityConfig {
         };
     }
 
-    //we need to add our custom refresh token generator to the DelegatingOAuth2TokenGenerator
-    @Bean
-    OAuth2TokenGenerator<OAuth2Token> tokenGenerator(JWKSource<SecurityContext> jwkSource) {
-        JwtEncoder jwtEncoder = new NimbusJwtEncoder(jwkSource);
-        JwtGenerator jwtAccessTokenGenerator = new JwtGenerator(jwtEncoder);
-        jwtAccessTokenGenerator.setJwtCustomizer(new Oauth2AccessTokenCustomizer()); // jwt customizer from part 1 (optional)
-
-        return new DelegatingOAuth2TokenGenerator(
-            jwtAccessTokenGenerator,
-            new OAuth2PublicClientRefreshTokenGenerator() // add customized refresh token generator
-        );
-    }
 }
 
 /*
