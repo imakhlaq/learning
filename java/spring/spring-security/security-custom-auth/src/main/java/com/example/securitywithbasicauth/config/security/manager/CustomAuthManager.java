@@ -1,3 +1,4 @@
+/*
 package com.example.securitywithbasicauth.config.security.manager;
 
 import com.example.securitywithbasicauth.config.security.providers.ApiAuthProvider;
@@ -7,10 +8,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
+*/
 /*
 You don't need to create an authentication manager because spring internally creates it.
 And there should be only one authentication manager
- */
+ *//*
+
 @AllArgsConstructor
 public class CustomAuthManager implements AuthenticationManager {
 
@@ -24,13 +27,15 @@ public class CustomAuthManager implements AuthenticationManager {
         if (apiAuthProvider.supports(authentication.getClass())) {
             return apiAuthProvider.authenticate(authentication);
         }
-        /*
+        */
+/*
         other authentication providers and authentication objects
          elseif (apiAuthProvider.supports(authentication.getClass())) {
             return apiAuthProvider.authenticate(authentication);
         }
-         */
+         *//*
+
 
         throw new BadCredentialsException("oh Nooo");
     }
-}
+}*/

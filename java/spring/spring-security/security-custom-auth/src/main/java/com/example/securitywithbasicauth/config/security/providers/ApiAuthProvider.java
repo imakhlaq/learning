@@ -1,11 +1,8 @@
 package com.example.securitywithbasicauth.config.security.providers;
 
 import com.example.securitywithbasicauth.config.security.authentication.ApiAuthenticationObject;
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -29,6 +26,7 @@ public class ApiAuthProvider implements AuthenticationProvider {
 
     @Value("${secret.key}")
     private String secretKey;
+    
     private final UserDetailsService userDetailsService;
 
     @Override
