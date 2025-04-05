@@ -48,8 +48,7 @@ public class UserDetailsServiceImpl {
 
         UserDetails me = User.builder()
             .username("afeefrazickamir@gmail.com")
-            .password("pass")
-            .passwordEncoder(passwordEncoder::encode)
+            .password(passwordEncoder.encode("pass"))
             .roles("USER", "ADMIN")
             .build();
         // @formatter:on

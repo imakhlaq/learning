@@ -5,6 +5,7 @@ import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationContext;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationException;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationToken;
 
 import java.util.function.Consumer;
 
@@ -19,7 +20,7 @@ public class CustomRedirectValidator implements Consumer<OAuth2AuthorizationCode
     @Override
     public void accept(OAuth2AuthorizationCodeRequestAuthenticationContext context) {
 
-        OAuth2AuthorizationCodeAuthenticationToken a = context.getAuthentication();
+        OAuth2AuthorizationCodeRequestAuthenticationToken a = context.getAuthentication();
         var registeredClient = context.getRegisteredClient();
         var uri = a.getRedirectUri();
         if (!registeredClient.getRedirectUris().contains(uri)) {

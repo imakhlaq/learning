@@ -17,17 +17,17 @@ import java.util.Map;
 @Slf4j
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
-    final private String logInURl;
+    final private String logInURl = "/login";
     final private ObjectMapper objectMapper = new ObjectMapper();
 
-    public CustomAccessDeniedHandler(String logInURl) {
-        this.logInURl = logInURl;
-    }
+//    public CustomAccessDeniedHandler(String logInURl) {
+//        this.logInURl = logInURl;
+//    }
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
-        log.error("Access without authentication");
+        log.error("OAuth client denied access");
 
         // Set response headers
         response.setContentType("application/json");

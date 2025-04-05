@@ -1,3 +1,4 @@
+/*
 package com.example.resource_server.config;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -46,9 +47,11 @@ public class SecurityConfig {
     @Bean
     public JwtDecoder jwtDecoder() {
 
-        /*
+        */
+/*
         Using the public key resource server will validate the JWT token
-         */
+         *//*
+
         return NimbusJwtDecoder
             .withJwkSetUri(authorizationServerUri).build();
     }
@@ -57,4 +60,4 @@ public class SecurityConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-}
+}*/

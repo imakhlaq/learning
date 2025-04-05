@@ -1,10 +1,11 @@
 package com.example.authserver.config;
 
-import com.example.authserver.entity.User;
 import com.example.authserver.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 
 //to customize the JWT
 @RequiredArgsConstructor
-@Component
+@Slf4j
 public class Oauth2AccessTokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
 
     // Here we are using the in memory user details service, but this could be any user service/repository
@@ -28,19 +29,23 @@ public class Oauth2AccessTokenCustomizer implements OAuth2TokenCustomizer<JwtEnc
     @Override
     public void customize(JwtEncodingContext context) {
 
+        log.info("Customizing Oauth2 access token");
+
         if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
+
+            log.info("Customizing access token");
             context.getClaims().claims(claims -> {
                 Object principal = context.getPrincipal().getPrincipal();
 
                 // STARTS HERE
-                SecurityUser user = null;
+                User user = null; // TODO when add the db fix this user to be security user
 
                 if (principal instanceof UserDetails) { // form login
-                    user = (SecurityUser) principal;
+                    user = (User) principal;
                 } else if (principal instanceof DefaultOidcUser oidcUser) { // oauth2 login
                     // fetch user by email to obtain User object when principal is not already a User object
                     String email = oidcUser.getEmail();
-                    user = (SecurityUser) userService.loadUserByUsername(email);
+                    user = (User) userService.loadUserByUsername(email);
                 }
 
                 if (user == null) return;

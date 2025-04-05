@@ -5,6 +5,7 @@ import com.example.authserver.repo.IClientRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -52,7 +53,10 @@ import java.util.UUID;
 //don't use this in memory instead used the above to retrive details from db
 //create a route to create a Client just like user
 @Configuration
+@AllArgsConstructor
 public class RegisteredClientRepositoryImpl {
+
+    private final PasswordEncoder passwordEncoder;
 
     //this represents one client that is registered with the auth server
     @Bean
@@ -63,28 +67,20 @@ public class RegisteredClientRepositoryImpl {
 
         var webClient = RegisteredClient
             .withId(UUID.randomUUID().toString())
-            .clientId("client")
-            .clientSecret("secret")
+            .clientId(GATEWAYCLIENTID)
+            .clientSecret(passwordEncoder.encode("secret"))
             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-            .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
             .redirectUri(GATEWAYCLIENT_HOSTURL + "/login/oauth2/code/" + GATEWAYCLIENTID)
             .postLogoutRedirectUri(GATEWAYCLIENT_HOSTURL + "/logout")
             .scope(OidcScopes.OPENID)  // openid scope is mandatory for authentication
             .scope(OidcScopes.PROFILE)
             .scope(OidcScopes.EMAIL)
-            .tokenSettings(
-                TokenSettings.builder()
-                    .accessTokenFormat(OAuth2TokenFormat.REFERENCE)//means the non opack token
-                    .accessTokenTimeToLive(Duration.ofSeconds(9000))
-                    .reuseRefreshTokens(false)
-                    .build()
-            )
             .build();
 
         String PUBLICCLIENTID = "public-client";
-        String PUBLICCLIENT_HOSTURL = "http://localhost:8080";
+        String PUBLICCLIENT_HOSTURL = "http://localhost:3000";
 
         RegisteredClient publicWebClient = RegisteredClient
             .withId(UUID.randomUUID().toString())
@@ -100,7 +96,9 @@ public class RegisteredClientRepositoryImpl {
             .clientSettings(ClientSettings.builder().requireProofKey(true).build()) // enable PKCE
             .tokenSettings(
                 TokenSettings.builder()
-                    .accessTokenTimeToLive(Duration.ofSeconds(7000))
+                    .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)//means the non opack token
+                    .accessTokenTimeToLive(Duration.ofSeconds(9000))
+                    .reuseRefreshTokens(false)
                     .build()
             )
             .build();

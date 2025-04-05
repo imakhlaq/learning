@@ -1,12 +1,15 @@
 package com.example.authserver.config;
 
 import com.example.authserver.config.social.*;
+import com.example.authserver.repo.IUserRepo;
 import com.example.authserver.service.RegisteredClientRepositoryImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -14,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationService;
@@ -34,7 +38,10 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final IUserRepo userRepo;
 
     //this is for authorization server
     @Bean
@@ -47,8 +54,21 @@ public class SecurityConfig {
 
         http
             .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
-            .with(authorizationServerConfigurer, authorizationServer ->
-                authorizationServer.oidc(Customizer.withDefaults()) // enable openid connect
+            .with(authorizationServerConfigurer,
+                authorizationServer ->
+                    authorizationServer
+                        .oidc(Customizer.withDefaults()) // enable openid connect
+                        .clientAuthentication(clientAuthenticationConfigurer ->
+                            clientAuthenticationConfigurer
+                                .authenticationConverter(new PublicClientRefreshTokenAuthenticationConverter())
+                                .authenticationProvider(
+                                    new PublicClientRefreshTokenAuthenticationProvider(
+                                        new RegisteredClientRepositoryImpl(passwordEncoder()).registeredClientRepository(),
+                                        new InMemoryOAuth2AuthorizationService() // replace with your AuthorizationService implementation
+                                    )
+                                )
+                        )
+
             )
             .authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated());
 
@@ -63,31 +83,14 @@ public class SecurityConfig {
             // enable auth server to accept JWT for endpoints such as /userinfo
             .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()));
 
-        //configuring the call back url
+/*        //configuring the call back url
         //if you want to customize the token endpoint or intosection endpoint you can customize in similar way
         http
             .getConfigurer(OAuth2AuthorizationServerConfigurer.class)
             .authorizationEndpoint(
                 //customizing the callback uri
                 a -> a.authenticationProviders(getAuthorizationEndpointProvider())
-            );
-
-        http
-            // ... other configuration
-            .with(authorizationServerConfigurer, authorizationServer ->
-                authorizationServer
-                    // ... other configuration
-                    .clientAuthentication(clientAuthenticationConfigurer ->
-                        clientAuthenticationConfigurer
-                            .authenticationConverter(new PublicClientRefreshTokenAuthenticationConverter())
-                            .authenticationProvider(
-                                new PublicClientRefreshTokenAuthenticationProvider(
-                                    new RegisteredClientRepositoryImpl().registeredClientRepository(),
-                                    new InMemoryOAuth2AuthorizationService() // replace with your AuthorizationService implementation if you have one
-                                )
-                            )
-                    )
-            );
+            );*/
 
         return http.build();
     }
@@ -108,11 +111,14 @@ public class SecurityConfig {
                 .successHandler(new OAuthAuthenticationSuccessHandler(this.userRepo))
                 .failureHandler(new OauthAuthenticationFailureHandler())
 
-                .loginPage("/login").permitAll()) // Enable oauth2 federated identity login
+                .loginPage("/login").permitAll()
+            ) // Enable oauth2 federated identity login
             .authorizeHttpRequests(authorize ->
                 authorize
                     .requestMatchers("/webjars/**", "/images/**", "/css/**",
-                        "/assets/**", "/favicon.ico", "/h2-console/**", "/swagger-ui/**", "/v3/**", "/oauth2/**")
+                        "/assets/**", "/favicon.ico", "/h2-console/**", "/swagger-ui/**", "/v3/**", "/oauth2/**"
+                        , "/login", "/sign_up"
+                    )
                     .permitAll()
                     .anyRequest().authenticated()
             );
@@ -120,8 +126,8 @@ public class SecurityConfig {
         http
             .exceptionHandling(exception ->
                 exception
-                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint(this.logInURl))
-                    .accessDeniedHandler(new CustomAccessDeniedHandler(this.logInURl))
+                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                    .accessDeniedHandler(new CustomAccessDeniedHandler())
             );
 
         return http.build();
