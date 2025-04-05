@@ -11,13 +11,13 @@ import java.util.List;
 // it represents the Authentication object
 @Setter
 @Getter
-public class ApiAuthentication implements Authentication {
+public class ApiAuthenticationObject implements Authentication {
 
     //when auth is successful update the isAuthenticated true
     private boolean isAuthenticated;
     private final String apiKey;
 
-    public ApiAuthentication(String apiKey) {
+    public ApiAuthenticationObject(String apiKey) {
         this.apiKey = apiKey;
     }
 

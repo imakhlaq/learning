@@ -1,15 +1,12 @@
 package com.example.securitywithbasicauth.config.security.filter;
 
-import com.example.securitywithbasicauth.config.security.authentication.ApiAuthentication;
-import com.example.securitywithbasicauth.config.security.manager.CustomAuthManager;
+import com.example.securitywithbasicauth.config.security.authentication.ApiAuthenticationObject;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.security.sasl.AuthenticationException;
@@ -22,6 +19,7 @@ Instead of extending Filter class use OncePerRequestFilter, and it will be calle
 public class ApiKeyFilter extends OncePerRequestFilter {
 
     private final String apiKey;
+    //injecting authentication manager to perform user authentication by taking out the user data from JWT or session
     private final AuthenticationManager authenticationManager;
 
     public ApiKeyFilter(String apiKey, AuthenticationManager authenticationManager) {
@@ -40,7 +38,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }
 
-        var unAuthenticatedObject = new ApiAuthentication(requestHeaderKey);
+        var unAuthenticatedObject = new ApiAuthenticationObject(requestHeaderKey);
 
         try {
 
@@ -63,8 +61,6 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(e.getMessage());
-            return;
         }
-
     }
 }

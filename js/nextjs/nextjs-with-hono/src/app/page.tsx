@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -13,7 +12,7 @@ export default function Home() {
     async function fetchData() {
       if (!input) return setSearchResults(undefined);
 
-      const res = await fetch(`/api/search?q=${input}}`);
+      const res = await fetch(`/api/v1/search?q=${input}}`);
     }
 
     fetchData();

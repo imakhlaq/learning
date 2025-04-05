@@ -11,6 +11,9 @@
   "dependencies": {
     "@hono/zod-openapi": "^0.19.2",
     "@scalar/hono-api-reference": "^0.7.3",
+    "@t3-oss/env-nextjs": "^0.11.1",
+    "@tanstack/react-query": "^5.64.1",
+    "@tanstack/react-query-devtools": "^5.64.1",
     "hono": "^4.7.5",
     "next": "15.2.4",
     "react": "^19.0.0",
@@ -26,6 +29,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "tailwindcss-animate": "^1.0.7"
   }
 }

@@ -19,11 +19,17 @@ public class CustomAuthManager implements AuthenticationManager {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        var apiAuthProvider = new ApiAuthProvider(key);
+        var apiAuthProvider = new ApiAuthProvider();
         //check here which authentication manager it is
         if (apiAuthProvider.supports(authentication.getClass())) {
             return apiAuthProvider.authenticate(authentication);
         }
+        /*
+        other authentication providers and authentication objects
+         elseif (apiAuthProvider.supports(authentication.getClass())) {
+            return apiAuthProvider.authenticate(authentication);
+        }
+         */
 
         throw new BadCredentialsException("oh Nooo");
     }

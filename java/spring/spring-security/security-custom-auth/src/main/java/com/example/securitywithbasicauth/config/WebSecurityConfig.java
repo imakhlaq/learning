@@ -37,7 +37,7 @@ public class WebSecurityConfig {
 //        http
 //            .addFilterAt(customAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        //
+        // before BasicAuthenticationFilter add Api key filter
         http
             .addFilterBefore(new ApiKeyFilter(apiKey, authenticationManager), BasicAuthenticationFilter.class);
 
@@ -103,6 +103,7 @@ public class WebSecurityConfig {
     }
 
     //storing the authentication manager in the context
+    //inject this authentication manager where you want to authenticate a user (/login) and provide it a ApiAuthentication object
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
