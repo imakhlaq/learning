@@ -1,0 +1,139 @@
+package com.sharefile.securedoc.service.user;
+
+import com.sharefile.securedoc.cache.CacheStore;
+import com.sharefile.securedoc.domain.RequestContext;
+import com.sharefile.securedoc.dto.User;
+import com.sharefile.securedoc.entity.ConfirmationEntity;
+import com.sharefile.securedoc.entity.RoleEntity;
+import com.sharefile.securedoc.entity.UserCredentialEntity;
+import com.sharefile.securedoc.entity.UserEntity;
+import com.sharefile.securedoc.enumeration.Authority;
+import com.sharefile.securedoc.enumeration.EventType;
+import com.sharefile.securedoc.enumeration.LoginType;
+import com.sharefile.securedoc.event.UserEvent;
+import com.sharefile.securedoc.exception.ApiException;
+import com.sharefile.securedoc.repository.ConfirmationRepo;
+import com.sharefile.securedoc.repository.CredentialRepo;
+import com.sharefile.securedoc.repository.RoleRepo;
+import com.sharefile.securedoc.repository.UserRepo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
+@Service
+@Transactional(rollbackFor = Exception.class)//rollback on any exception
+@RequiredArgsConstructor
+@Slf4j
+public class UserServiceImpl implements IUserService {
+
+    private final UserRepo userRepo;
+    private final RoleRepo roleRepo;
+    private final CredentialRepo credentialRepo;
+    private final ConfirmationRepo confirmationRepo;
+    private final ApplicationEventPublisher eventPublisher;
+    //private final PasswordEncoder passwordEncoder;
+    private final CacheStore<String, Integer> userCacheStore;
+
+    @Override
+    public void createUser(String firstName, String lastName, String password, String email) {
+
+        var userEntity = userRepo.save(createUserEntity(firstName, lastName, email));
+        var credentialEntity = new UserCredentialEntity(userEntity, password);
+        credentialRepo.save(credentialEntity);
+        var confirmationEntity = new ConfirmationEntity();
+        confirmationEntity.setUser(userEntity);
+        confirmationRepo.save(confirmationEntity);
+        eventPublisher.publishEvent(new UserEvent(userEntity,
+            EventType.REGISTRATION,
+            Map.of("key", confirmationEntity.getKey())));
+
+    }
+
+    @Override
+    public User getUserByUserId(String userId) {
+        return userRepo.findByUserId(userId).orElseThrow(() -> new ApiException("User Not found"));
+    }
+
+    @Override
+    public RoleEntity getRoleName(String name) {
+        var role = roleRepo.findByNameIgnoreCase(name);
+        return role.orElseThrow(() -> new ApiException("Role not found"));
+    }
+    @Override
+    public void verifyToken(String key) {
+
+        var confirmationEntity = confirmationRepo.findAllByKey(key);
+        if (confirmationEntity.isEmpty()) {
+            throw new ApiException("Confirmation not found");
+        }
+        var userEntity = userRepo.findAllByEmailIgnoreCase(confirmationEntity.get().getUser().getEmail());
+
+        if (userEntity.isEmpty()) {
+            throw new ApiException("User not found");
+        }
+
+        var user = userEntity.get();
+        user.setEnable(true);
+        userRepo.save(user);
+
+        var confirmation = confirmationEntity.get();
+        confirmation.setKey("");
+        confirmationRepo.save(confirmation);
+    }
+    @Override
+    public void updateLoginAttempt(String email, LoginType loginType) {
+        var userEntity = userRepo.findAllByEmailIgnoreCase(email).orElseThrow(() -> new ApiException("User not found"));
+        RequestContext.setUserId(userEntity.getId());
+        switch (loginType) {
+            case LOGIN_ATTEMPT -> {
+                if (userCacheStore.get(userEntity.getFirstName()) == null) {
+                    userEntity.setLoginAttempts(0);
+                    userEntity.setAccountNonLocked(true);
+                }
+                userEntity.setLoginAttempts(userEntity.getLoginAttempts() + 1);
+                userCacheStore.put(userEntity.getEmail(), userEntity.getLoginAttempts());
+                if (userCacheStore.get(userEntity.getEmail()) > 5) {
+                    userEntity.setAccountNonLocked(false);
+                }
+            }
+            case LOGIN_SUCCESS -> {
+                userEntity.setLoginAttempts(0);
+                userEntity.setAccountNonLocked(false);
+                userEntity.setLastLogin(LocalDateTime.now());
+                userCacheStore.evict(userEntity.getEmail());
+            }
+        }
+        userRepo.save(userEntity);
+    }
+
+    private UserEntity createUserEntity(String firstName, String lastName, String email) {
+
+        var role = getRoleName(Authority.USER.name());
+        return UserEntity.builder()
+            .userId(UUID.randomUUID().toString())
+            .firstName(firstName)
+            .lastName(lastName)
+            .email(email)
+            .role(role)
+            .lastLogin(LocalDateTime.now())
+            .loginAttempts(0)
+            .accountNonExpired(true)
+            .accountNonLocked(true)
+            .accountNonLocked(true)
+            .enable(false)
+            .bio(EMPTY)
+            .phoneNumber(EMPTY)
+            .qrCodeSecret(EMPTY)
+            .imageUrl("https://cdn-icons-png.flaticon.com/512/149/149071.png")
+            .build();
+    }
+}

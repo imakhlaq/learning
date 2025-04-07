@@ -1,0 +1,20 @@
+services:
+  postgresdb:
+    container_name: postgrescontainer
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    expose:
+      - 5432 #exposing port from container
+    ports:
+      - 5432:5432 #mapping container port to your device port
+    volumes:
+      - postgresvolume:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.dl/schema.sql #if you want to run a sql script when container starts
+#pgadmin:
+
+volumes:
+  postgresvolume:
