@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
@@ -30,6 +31,7 @@ import static com.sharefile.securedoc.utils.RequestUtils.handleErrorResponse;
 import static org.springframework.http.HttpMethod.POST;
 
 @Slf4j
+@Component
 public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     public static final String LOGIN_PATH = "/user/login";
@@ -72,7 +74,8 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
 
     //when successful auth happens this callback will be called
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                            FilterChain chain, Authentication authResult) throws IOException {
 
         var user = (User) authResult.getPrincipal();
         userService.updateLoginAttempt(user.getEmail(), LoginType.LOGIN_SUCCESS);

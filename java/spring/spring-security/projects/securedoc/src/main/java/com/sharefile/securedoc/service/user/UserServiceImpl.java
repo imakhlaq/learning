@@ -20,14 +20,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.UUID;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static com.sharefile.securedoc.utils.UserUtils.createUserEntity;
+import static com.sharefile.securedoc.utils.UserUtils.fromUserEntity;
 
 @Service
 @Transactional(rollbackFor = Exception.class)//rollback on any exception
@@ -40,13 +41,14 @@ public class UserServiceImpl implements IUserService {
     private final CredentialRepo credentialRepo;
     private final ConfirmationRepo confirmationRepo;
     private final ApplicationEventPublisher eventPublisher;
-    //private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final CacheStore<String, Integer> userCacheStore;
 
     @Override
     public void createUser(String firstName, String lastName, String password, String email) {
 
-        var userEntity = userRepo.save(createUserEntity(firstName, lastName, email));
+        var role = getRoleName(Authority.USER.name());
+        var userEntity = userRepo.save(createUserEntity(firstName, lastName, email, role));
         var credentialEntity = new UserCredentialEntity(userEntity, password);
         credentialRepo.save(credentialEntity);
         var confirmationEntity = new ConfirmationEntity();
@@ -60,17 +62,15 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User getUserByUserId(String userId) {
-/*        var userEntity = userRepo.findByUserId(userId).orElseThrow(() -> new ApiException("User Not found"));
-        var user = new User();
-        BeanUtils.copyProperties(userEntity, user);
-        return user;*/
-        return null;
+        var userEntity = userRepo.findByUserId(userId).orElseThrow(() -> new ApiException("User Not found"));
+        return fromUserEntity(userEntity, userEntity.getRole(), getUserCredentialById(userEntity.getId()));
     }
     @Override
     public User getUserByEmail(String email) {
         var userEntity = userRepo.findAllByEmailIgnoreCase(email).orElseThrow(() -> new ApiException("No credential found"));
         return fromUserEntity(userEntity, userEntity.getRole(), getUserCredentialById(userEntity.getId()));
     }
+
     @Override
     public UserCredentialEntity getUserCredentialById(Long userId) {
         var credentialById = credentialRepo.getUserCredentialEntityByUser_Id(userId);
@@ -127,27 +127,5 @@ public class UserServiceImpl implements IUserService {
             }
         }
         userRepo.save(userEntity);
-    }
-
-    private UserEntity createUserEntity(String firstName, String lastName, String email) {
-
-        var role = getRoleName(Authority.USER.name());
-        return UserEntity.builder()
-            .userId(UUID.randomUUID().toString())
-            .firstName(firstName)
-            .lastName(lastName)
-            .email(email)
-            .role(role)
-            .lastLogin(LocalDateTime.now())
-            .loginAttempts(0)
-            .accountNonExpired(true)
-            .accountNonLocked(true)
-            .accountNonLocked(true)
-            .enable(false)
-            .bio(EMPTY)
-            .phoneNumber(EMPTY)
-            .qrCodeSecret(EMPTY)
-            .imageUrl("https://cdn-icons-png.flaticon.com/512/149/149071.png")
-            .build();
     }
 }

@@ -10,8 +10,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.security.auth.login.CredentialException;
-import javax.security.auth.login.CredentialExpiredException;
 import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
@@ -53,6 +51,6 @@ public class ApiAuthenticationProvider implements AuthenticationProvider {
     }
     @Override
     public boolean supports(Class<?> authentication) {
-        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+        return ApiAuthenticationObject.class.isAssignableFrom(authentication);
     }
 }

@@ -2,41 +2,46 @@ package com.sharefile.securedoc.domain;
 
 import com.sharefile.securedoc.dto.User;
 import com.sharefile.securedoc.entity.UserCredentialEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
+@AllArgsConstructor
 public class UserPrincipal implements UserDetails {
-    public UserPrincipal(User user, UserCredentialEntity userCredential) {
-    }
+    @Getter
+    private final User user;
+    private final UserCredentialEntity userCredential;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return AuthorityUtils.commaSeparatedStringToAuthorityList(user.getAuthorities());
     }
     @Override
     public String getPassword() {
-        return "";
+        return userCredential.getPassword();
     }
     @Override
     public String getUsername() {
-        return "";
+        return user.getEmail();
     }
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return user.getAccountNonExpired();
     }
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return user.getAccountNonLocked();
     }
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return user.getCredentialsNonExpired();
     }
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return user.getEnabled();
     }
 }
