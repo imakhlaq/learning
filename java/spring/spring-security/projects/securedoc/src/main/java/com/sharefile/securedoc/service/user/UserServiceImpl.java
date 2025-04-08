@@ -18,13 +18,13 @@ import com.sharefile.securedoc.repository.RoleRepo;
 import com.sharefile.securedoc.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -60,7 +60,21 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User getUserByUserId(String userId) {
-        return userRepo.findByUserId(userId).orElseThrow(() -> new ApiException("User Not found"));
+/*        var userEntity = userRepo.findByUserId(userId).orElseThrow(() -> new ApiException("User Not found"));
+        var user = new User();
+        BeanUtils.copyProperties(userEntity, user);
+        return user;*/
+        return null;
+    }
+    @Override
+    public User getUserByEmail(String email) {
+        var userEntity = userRepo.findAllByEmailIgnoreCase(email).orElseThrow(() -> new ApiException("No credential found"));
+        return fromUserEntity(userEntity, userEntity.getRole(), getUserCredentialById(userEntity.getId()));
+    }
+    @Override
+    public UserCredentialEntity getUserCredentialById(Long userId) {
+        var credentialById = credentialRepo.getUserCredentialEntityByUser_Id(userId);
+        return credentialById.orElseThrow(() -> new ApiException("No credential found"));
     }
 
     @Override
@@ -87,7 +101,7 @@ public class UserServiceImpl implements IUserService {
 
         var confirmation = confirmationEntity.get();
         confirmation.setKey("");
-        confirmationRepo.save(confirmation);
+        confirmationRepo.delete(confirmation);
     }
     @Override
     public void updateLoginAttempt(String email, LoginType loginType) {

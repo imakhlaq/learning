@@ -2,12 +2,16 @@ package com.sharefile.securedoc.security;
 
 import com.sharefile.securedoc.dto.User;
 import com.sharefile.securedoc.exception.ApiException;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 import java.util.Collection;
 
+@Setter
+@Getter
 public class ApiAuthenticationObject extends AbstractAuthenticationToken {
     private User user;
     private String email;

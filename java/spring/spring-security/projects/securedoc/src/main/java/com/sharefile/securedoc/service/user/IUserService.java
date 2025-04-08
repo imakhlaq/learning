@@ -2,6 +2,7 @@ package com.sharefile.securedoc.service.user;
 
 import com.sharefile.securedoc.dto.User;
 import com.sharefile.securedoc.entity.RoleEntity;
+import com.sharefile.securedoc.entity.UserCredentialEntity;
 import com.sharefile.securedoc.enumeration.LoginType;
 
 public interface IUserService {
@@ -10,4 +11,6 @@ public interface IUserService {
     void verifyToken(String token);
     void updateLoginAttempt(String email, LoginType loginType);
     User getUserByUserId(String userId);
+    User getUserByEmail(String email);
+    UserCredentialEntity getUserCredentialById(Long id);
 }

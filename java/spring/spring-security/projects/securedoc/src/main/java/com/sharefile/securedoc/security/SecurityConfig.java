@@ -1,5 +1,6 @@
 package com.sharefile.securedoc.security;
 
+import com.sharefile.securedoc.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -35,7 +38,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
+/*    @Bean
     public UserDetailsService userDetailsService() {
 
         var user1 = User.withDefaultPasswordEncoder()
@@ -50,12 +53,18 @@ public class SecurityConfig {
             .build();
 
         return new InMemoryUserDetailsManager(user1, user2);
-    }
+    }*/
 
     //registering the authentication provider with authentication manager
+    //ProviderManager is an implementation of authentication manager
     @Bean
-    public ProviderManager providerManager(UserDetailsService userDetailsService) {
-        var myProvider = new MyOwnAuthenticationProvider(userDetailsService);
-        return new ProviderManager(myProvider);
+    public ProviderManager providerManager(IUserService userDetailsService, PasswordEncoder passwordEncoder) {
+        var apiProvider = new ApiAuthenticationProvider(userDetailsService, passwordEncoder);
+        return new ProviderManager(apiProvider);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

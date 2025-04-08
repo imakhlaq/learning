@@ -88,7 +88,7 @@ public class JwtServiceImpl extends JwtConfiguration implements JwtService {
     private final BiFunction<User, TokenType, String> buildToken = (user, tokenType) ->
         Objects.equals(tokenType, ACCESS) ? jwtBuilder
             .get()
-            .subject(user.getUserId())
+            .subject(user.getUserId())//setting subject to be userId ( id that will be exposed to the user. it's not PK)
             .claim(AUTHORITIES, user.getAuthorities())
             .claim(ROLE, user.getRole())
             .expiration(Date.from(Instant.now().plusSeconds(getExpiration())))
@@ -114,7 +114,7 @@ public class JwtServiceImpl extends JwtConfiguration implements JwtService {
                 cookie.setHttpOnly(true);
                 //cookie.setSecure(true); only works with https
                 cookie.setMaxAge(2 * 60);
-                cookie.setAttribute("SameSite", NONE.name());
+                cookie.setAttribute("SameSite", NONE.name());//important because CSRF token will be sent form frontend to backend
                 response.addCookie(cookie);
             }
             case REFRESH -> {
@@ -124,7 +124,7 @@ public class JwtServiceImpl extends JwtConfiguration implements JwtService {
                 cookie.setHttpOnly(true);
                 //cookie.setSecure(true); only works with https
                 cookie.setMaxAge(2 * 60 * 60);
-                cookie.setAttribute("SameSite", NONE.name());
+                cookie.setAttribute("SameSite", NONE.name());//important because CSRF token will be sent form frontend to backend
                 response.addCookie(cookie);
             }
         }
@@ -152,11 +152,24 @@ public class JwtServiceImpl extends JwtConfiguration implements JwtService {
     public <T> T getToken(String token, Function<TokenData, T> tokenFunction) {
         return tokenFunction.apply(
             TokenData.builder()
-                .isValid(true)
+                //comparing the user from db and userId from Jwt
+                .isValid(Objects.equals(userService.getUserByUserId(subject.apply(token)).getUserId(), claimsFunction.apply(token).getSubject()))
                 .authorities(authorities.apply(token))
                 .claims(claimsFunction.apply(token))
-                .user(userService.getUserByUserId(subject.apply(token)))
+                .user(userService.getUserByUserId(subject.apply(token)))//above we set the subject in JWT to be userId
                 .build()
         );
+    }
+    /*
+    Removing the cookie from browser/ logging out user
+     */
+    @Override
+    public void removeCookie(HttpServletRequest request, HttpServletResponse response, String cookieName) {
+        var optionalCookie = extractCookie.apply(request, cookieName);
+        if (optionalCookie.isPresent()) {
+            var cookie = optionalCookie.get();
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
     }
 }

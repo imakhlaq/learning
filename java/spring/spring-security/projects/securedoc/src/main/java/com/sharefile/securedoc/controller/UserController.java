@@ -35,6 +35,15 @@ public class UserController {
         return ResponseEntity.created(getUri())
             .body(getResponse(request, Map.of(), "Account is created check email to activate your account", HttpStatus.CREATED));
     }
+
+    @PostMapping("/verify/account")//because of @Valid spring will validate the req body
+    public ResponseEntity<Response> verifyToken(@RequestParam("toke") String token, HttpServletRequest request) {
+
+        userService.verifyToken(token);
+
+        return ResponseEntity.created(getUri())
+            .body(getResponse(request, Map.of(), "Account is verified", HttpStatus.CREATED));
+    }
     private URI getUri() {
         return URI.create("");
     }
