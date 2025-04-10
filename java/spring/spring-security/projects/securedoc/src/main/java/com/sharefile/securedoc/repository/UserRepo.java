@@ -1,6 +1,5 @@
 package com.sharefile.securedoc.repository;
 
-import com.sharefile.securedoc.entity.UserCredentialEntity;
 import com.sharefile.securedoc.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
