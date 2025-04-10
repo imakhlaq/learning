@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: authorization_server
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    jdbc:
+      dialect: postgresql
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 432843073336-25dti6760u9drsjee2rmuho3au9ph90n.apps.googleusercontent.com # replace with your client id
+            clientSecret: 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 # replace with your client secret
+            authorization-grant-type: authorization_code
+server:
+  port: 9000
+  address: 127.0.0.1

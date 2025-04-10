@@ -1,0 +1,12 @@
+spring:
+  # setting up the authorization server to get public key and verify the tokenserver:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:9000
+  application:
+    name: resource_server
+
+server:
+  port: 8081
