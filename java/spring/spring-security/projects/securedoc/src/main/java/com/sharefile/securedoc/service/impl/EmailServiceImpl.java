@@ -1,6 +1,7 @@
-package com.sharefile.securedoc.service.email;
+package com.sharefile.securedoc.service.impl;
 
-import jakarta.mail.internet.MimeMessage;
+import com.sharefile.securedoc.exception.ApiException;
+import com.sharefile.securedoc.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +16,7 @@ import static com.sharefile.securedoc.utils.EmailUtils.getPasswordResetMessage;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class EmailService implements IEmailService {
+public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
 
@@ -39,6 +40,7 @@ public class EmailService implements IEmailService {
             mailSender.send(message);
         } catch (Exception e) {
             log.error(e.getMessage());
+            throw new ApiException("Unable to send email"); // Generate a custom email message for the Api exception because it's safer.
         }
     }
 
@@ -54,8 +56,7 @@ public class EmailService implements IEmailService {
             mailSender.send(message);
         } catch (Exception e) {
             log.error(e.getMessage());
+            throw new ApiException("Unable to send email"); // Generate a custom email message for the Api exception because it's safer.
         }
-
     }
-
 }

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component //Event listener is needed to be a bean
 @RequiredArgsConstructor
 public class UserEventListener {
 
@@ -19,7 +19,7 @@ public class UserEventListener {
                 .sendNewAccountEmail(event.getUser().getFirstName(),
                     event.getUser().getEmail(),
                     (String) event.getData().get("key"));
-            
+
             case RESETPASSWORD -> emailService
                 .sendPasswordResetEmail(event.getUser().getFirstName(),
                     event.getUser().getEmail(),

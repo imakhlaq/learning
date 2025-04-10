@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+//The user details is similar to the user details services.
 @AllArgsConstructor
 public class UserPrincipal implements UserDetails {
     @Getter

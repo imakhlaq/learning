@@ -1,92 +1,146 @@
 package com.sharefile.securedoc.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.sharefile.securedoc.domain.Response;
 import com.sharefile.securedoc.exception.ApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.util.BiConsumer;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.security.authentication.*;
 
 import java.nio.file.AccessDeniedException;
-import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 import static java.time.LocalTime.now;
 import static java.util.Collections.emptyMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.apache.logging.log4j.util.Strings.EMPTY;
+import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class RequestUtils {
 
-    public static Response getResponse(HttpServletRequest request, Map<?, ?> data, String message, HttpStatus status) {
-
-        return new Response(now().toString(),
-            status.value(),
-            request.getRequestURI(),
-            HttpStatus.valueOf(status.value()),
-            message,
-            EMPTY,
-            data
-        );
-    }
-
+    /**
+     * Writes the response to the HTTP servlet response.
+     *
+     * @param httpServletResponse the HTTP servlet response
+     * @param response the response to be written
+     * @throws ApiException if an exception occurs while writing the response
+     */
     private static final BiConsumer<HttpServletResponse, Response> writeResponse = (httpServletResponse, response) -> {
+        // Helper method for the handleErrorResponse helps to write the response to the HTTP servlet response
         try {
+            // Get the output stream from the HTTP servlet response
             var outputStream = httpServletResponse.getOutputStream();
+            // Write the response using the ObjectMapper
             new ObjectMapper().writeValue(outputStream, response);
+            // Flush the output stream
             outputStream.flush();
-        } catch (Exception e) {
-            throw new ApiException("Some exception accused");
+        } catch (Exception exception) {
+            // Throw an ApiException with the exception message
+            throw new ApiException(exception.getMessage());
         }
     };
 
-    public static void handleErrorResponse(HttpServletRequest request, HttpServletResponse response, Exception exception) {
-        if (exception instanceof AccessDeniedException e) {
-            var apiResponse = getErrorResponse(request, response, exception, FORBIDDEN);
+    /**
+     * Returns an error response message based on the provided exception and HTTP status.
+     *
+     * @param exception The exception that occurred.
+     * @param httpStatus The HTTP status code.
+     * @return The error response message.
+     */
+    private static final BiFunction<Exception, HttpStatus, String> errorReason = (exception, httpStatus) -> {
+        // Check if the HTTP status is FORBIDDEN or UNAUTHORIZED
+        if (httpStatus.isSameCodeAs(FORBIDDEN)) {
+            return "You do not have enough permission";
+        }
+        if (httpStatus.isSameCodeAs(UNAUTHORIZED)) {
+            return "You are not logged in";
+        }
+        // Check if the exception is one of the specified types
+        if (exception instanceof DisabledException || exception instanceof LockedException
+            || exception instanceof BadCredentialsException || exception instanceof CredentialsExpiredException
+            || exception instanceof ApiException) {
+            return exception.getMessage();
+        }
+        // Check if the HTTP status is a 5xx server error
+        if (httpStatus.is5xxServerError()) {
+            return "An internal Server error occurred";
+        } else {
+            return "An error occured. Please kindly try again.";
+        }
+    };
+
+    public static Response getResponse(HttpServletRequest request, Map<?, ?> data, String message, HttpStatus status) {
+
+        return new Response(now().toString(), status.value(),
+            request.getRequestURI(), HttpStatus.valueOf(status.value()),
+            message, EMPTY, data);
+    }
+
+    /**
+     * Handles an error response by writing the error response inside the response body.
+     *
+     * @param request   the HTTP servlet request
+     * @param response  the HTTP servlet response
+     * @param exception the exception that occurred
+     */
+    public static void handleErrorResponse(HttpServletRequest request, HttpServletResponse response,
+                                           Exception exception) {
+        // Check if the exception is an instance of AccessDeniedException
+        if (exception instanceof AccessDeniedException) {
+            // Get the error response object
+            Response apiResponse = getErrorResponse(request, response, exception, FORBIDDEN);
+            // Write the error response inside the response body httpServlet Response
+            writeResponse.accept(response, apiResponse);
+        } else if
+        (exception instanceof InsufficientAuthenticationException) {
+            var apiResponse = getErrorResponse(request, response, exception, UNAUTHORIZED);
+            writeResponse.accept(response, apiResponse);
+        } else if
+        (exception instanceof MismatchedInputException) {
+            var apiResponse = getErrorResponse(request, response, exception, BAD_REQUEST);
+            writeResponse.accept(response, apiResponse);
+        } else if
+        (exception instanceof DisabledException || exception instanceof LockedException
+                || exception instanceof BadCredentialsException || exception instanceof CredentialsExpiredException
+                || exception instanceof ApiException) {
+            var apiResponse = getErrorResponse(request, response, exception, BAD_REQUEST);
+            writeResponse.accept(response, apiResponse);
+        } else {
+            Response apiResponse = getErrorResponse(request, response, exception, INTERNAL_SERVER_ERROR);
             writeResponse.accept(response, apiResponse);
         }
     }
 
-    private static final BiFunction<Exception, HttpStatus, String> errorReason = (exception, httpStatus) -> {
-        if (httpStatus.isSameCodeAs(FORBIDDEN)) {
-            return "You are not allowed to access this resource";
-        }
+    public static Response handleErrorResponse(String message, String exception, HttpServletRequest request, HttpStatusCode status) {
+        return new Response(now().toString(), status.value(),
+            request.getRequestURI(), HttpStatus.valueOf(status.value()),
+            message, exception, emptyMap());
+    }
 
-        if (httpStatus.isSameCodeAs(UNAUTHORIZED)) {
-            return "You are not logged in";
-        }
-        if (exception instanceof ApiException || exception instanceof DisabledException || exception instanceof AccessDeniedException ||
-            exception instanceof LockedException || exception instanceof BadCredentialsException || exception instanceof CredentialsExpiredException) {
-            return exception.getMessage();
-        }
-        if (httpStatus.is5xxServerError()) {
-            return "Internal Server Error";
-        } else {
-            return "An unexpected error occurred";
-        }
-
-    };
-
+    /**
+     * Gets an error response object based on the given parameters.
+     *
+     * @param request   the HTTP servlet request
+     * @param response  the HTTP servlet response
+     * @param exception the exception that occurred
+     * @param status    the HTTP status code for the error response
+     * @return an error response object
+     */
     private static Response getErrorResponse(HttpServletRequest request, HttpServletResponse response,
-                                             Exception exception, HttpStatus httpStatus) {
-        response.setContentType("application/json");
-        response.setStatus(httpStatus.value());
-        return new Response(
-            LocalDateTime.now().toString(),
-            httpStatus.value(),
-            request.getRequestURI(),
-            HttpStatus.valueOf(httpStatus.value()),
-            errorReason.apply(exception, httpStatus),
-            getRootCauseMessage(exception),
-            emptyMap()
-        );
+                                             Exception exception, HttpStatus status) {
+        // Set the content type of the response to JSON
+        response.setContentType(APPLICATION_JSON_VALUE);
+        // Set the HTTP status code of the response
+        response.setStatus(status.value());
+        // Create and return a new error response object
+        return new Response(now().toString(), status.value(),
+            request.getRequestURI(), HttpStatus.valueOf(status.value()),
+            errorReason.apply(exception, status), getRootCauseMessage(exception), emptyMap());
     }
 }

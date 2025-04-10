@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Bean;
 @Getter
 @Setter
 public class Token {
-    private String accessToken;
-    private String refreshToken;
+    private String access;
+    private String refresh;
 }

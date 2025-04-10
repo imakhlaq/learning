@@ -14,8 +14,8 @@ import java.util.List;
 @Setter
 public class TokenData {
     private User user;
-    private Claims claims;
+    private Claims claims;//Coming from the jjwt lib
     private boolean isValid;
-    private List<GrantedAuthority> authorities;
+    private List<GrantedAuthority> authorities; //AUTHORITIES ASSOCIATED WITH THE TOKEN.
 
 }

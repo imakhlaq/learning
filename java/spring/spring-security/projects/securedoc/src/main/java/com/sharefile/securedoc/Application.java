@@ -21,21 +21,20 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Bean
-    public CommandLineRunner commandLineRunner(ApplicationContext ctx, RoleRepo roleRepo) {
+    CommandLineRunner commandLineRunner(RoleRepo roleRepository) {
         return args -> {
+/*		RequestContext.setUserId(0L);
+			var userRole = new RoleEntity();
+			userRole.setName(Authority.USER.name());
+			userRole.setAuthorities(Authority.USER);
+			roleRepository.save(userRole);
 
-            RequestContext.setUserId(0L);
-            var userRoles = new RoleEntity();
-            userRoles.setName(Authority.USER.name());
-            userRoles.setAuthorities(Authority.USER);
-            roleRepo.save(userRoles);
 
-            var adminRoles = new RoleEntity();
-            userRoles.setName(Authority.ADMIN.name());
-            userRoles.setAuthorities(Authority.ADMIN);
-            roleRepo.save(adminRoles);
-            RequestContext.onStart();
+			var adminRole = new RoleEntity();
+			adminRole.setName(Authority.ADMIN.name());
+			adminRole.setAuthorities(Authority.ADMIN);
+			roleRepository.save(adminRole);
+			RequestContext.start();*/
         };
     }
 }

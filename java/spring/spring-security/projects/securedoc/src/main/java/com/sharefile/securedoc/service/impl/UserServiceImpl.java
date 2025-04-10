@@ -1,4 +1,4 @@
-package com.sharefile.securedoc.service.user;
+package com.sharefile.securedoc.service.impl;
 
 import com.sharefile.securedoc.cache.CacheStore;
 import com.sharefile.securedoc.domain.RequestContext;
@@ -6,7 +6,6 @@ import com.sharefile.securedoc.dto.User;
 import com.sharefile.securedoc.entity.ConfirmationEntity;
 import com.sharefile.securedoc.entity.RoleEntity;
 import com.sharefile.securedoc.entity.UserCredentialEntity;
-import com.sharefile.securedoc.entity.UserEntity;
 import com.sharefile.securedoc.enumeration.Authority;
 import com.sharefile.securedoc.enumeration.EventType;
 import com.sharefile.securedoc.enumeration.LoginType;
@@ -16,9 +15,9 @@ import com.sharefile.securedoc.repository.ConfirmationRepo;
 import com.sharefile.securedoc.repository.CredentialRepo;
 import com.sharefile.securedoc.repository.RoleRepo;
 import com.sharefile.securedoc.repository.UserRepo;
+import com.sharefile.securedoc.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ import static com.sharefile.securedoc.utils.UserUtils.fromUserEntity;
 @Transactional(rollbackFor = Exception.class)//rollback on any exception
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
@@ -73,7 +72,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserCredentialEntity getUserCredentialById(Long userId) {
-        var credentialById = credentialRepo.getUserCredentialEntityByUser_Id(userId);
+        var credentialById = credentialRepo.getReferenceById(userId);
         return credentialById.orElseThrow(() -> new ApiException("No credential found"));
     }
 
@@ -85,7 +84,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void verifyToken(String key) {
 
-        var confirmationEntity = confirmationRepo.findAllByKey(key);
+        var confirmationEntity = confirmationRepo.findByKey(key);
         if (confirmationEntity.isEmpty()) {
             throw new ApiException("Confirmation not found");
         }

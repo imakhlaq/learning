@@ -22,18 +22,33 @@ public class UserEntity extends Auditable {
     private String email;
     private Integer loginAttempts;
     private LocalDateTime lastLogin;
-    private String phoneNumber;
+    private String phone;
     private String bio;
     private String imageUrl;
+    /*
+    =================
+    SPRING SECURITY FIELDS
+    =================
+     */
     private Boolean accountNonExpired;
     private Boolean accountNonLocked;
-    private Boolean enabled;
-    private Boolean enable;
     private Boolean credentialsNonExpired;
+    private Boolean enabled;
+    private Boolean mfa;
+    /*
+   =================
+   MFA FIELDS
+   =================
+    */
     @JsonIgnore //ignore this property while deserialization
     private String qrCodeSecret;
     @Column(columnDefinition = "text")//JPA uses varchar256 by default
     private String qrCodeImageUri;
+    /*
+    =================
+    USER AND USER_ROLES
+    =================
+  */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_roles",
@@ -41,5 +56,4 @@ public class UserEntity extends Auditable {
         inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private RoleEntity role;
-
 }

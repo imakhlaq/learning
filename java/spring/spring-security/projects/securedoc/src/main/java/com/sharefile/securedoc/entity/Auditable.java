@@ -43,22 +43,38 @@ public abstract class Auditable {
     @CreatedDate
     @NotNull
     private LocalDateTime updatedAt;
-
+    /**
+     * ======================
+     * This method is called before an entity is persisted in the database.
+     * It sets the createdAt, createdBy, updatedBy, and updatedAt fields of the entity.
+     * It also checks if a userId is provided and throws an exception if it is not.
+     * ======================
+     */
     @PrePersist
     protected void beforePersist() { //will be called before persisting the entity
         var userId = RequestContext.getUserId();
         if (userId == null) throw new ApiException("Can't persist a entity without user ID");
         setCreatedBy(userId);
-        setCreatedBy(userId);
+        setUpdatedBy(userId);
         setCreatedAt(LocalDateTime.now());
         setUpdatedAt(LocalDateTime.now());
     }
-
+    /**
+     * ======================
+     * Updates the entity before it is persisted to the database.
+     * This method is annotated with @PreUpdate, which means it will be called by the persistence provider
+     * immediately before the entity is updated in the database.
+     * The method retrieves the user ID from the RequestContext and throws an ApiException if the user ID is null.
+     * It then sets the updatedAt field to the current time and the updatedBy field to the user ID.
+     *
+     * @throws ApiException if the user ID is null
+     *                      ======================
+     */
     @PreUpdate
     protected void beforeUpdate() { //will be called before persisting the entity
         var userId = RequestContext.getUserId();
         if (userId == null) throw new ApiException("Can't update a entity without user ID");
-        setCreatedBy(userId);
+        setUpdatedBy(userId);
         setUpdatedAt(LocalDateTime.now());
     }
 }

@@ -1,4 +1,4 @@
-package com.sharefile.securedoc.service.JwtService;
+package com.sharefile.securedoc.service;
 
 import com.sharefile.securedoc.domain.Token;
 import com.sharefile.securedoc.domain.TokenData;
@@ -14,6 +14,6 @@ public interface JwtService {
     String createToken(User user, Function<Token, String> tokenFunction);
     Optional<String> extractToken(HttpServletRequest request, String tokenType);
     void addCookie(HttpServletResponse response, User user, TokenType type);
-    <T> T getToken(String token, Function<TokenData, T> tokenFunction);
+    <T> T getTokenData(String token, Function<TokenData, T> tokenFunction);
     void removeCookie(HttpServletRequest request, HttpServletResponse response, String cookieName);
 }

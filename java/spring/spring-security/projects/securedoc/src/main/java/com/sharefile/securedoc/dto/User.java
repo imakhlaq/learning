@@ -1,11 +1,6 @@
 package com.sharefile.securedoc.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sharefile.securedoc.entity.RoleEntity;
-import jakarta.persistence.*;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 public class User {

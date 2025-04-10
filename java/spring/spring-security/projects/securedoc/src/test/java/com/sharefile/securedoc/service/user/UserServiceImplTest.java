@@ -6,19 +6,18 @@ import com.sharefile.securedoc.entity.UserEntity;
 import com.sharefile.securedoc.enumeration.Authority;
 import com.sharefile.securedoc.repository.CredentialRepo;
 import com.sharefile.securedoc.repository.UserRepo;
+import com.sharefile.securedoc.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)

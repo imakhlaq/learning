@@ -1,8 +1,6 @@
-package com.sharefile.securedoc.service.email;
+package com.sharefile.securedoc.service;
 
-import jakarta.validation.constraints.NotNull;
-
-public interface IEmailService {
+public interface EmailService {
     void sendNewAccountEmail(String name, String to, String token);
 
     void sendPasswordResetEmail(String name, String to, String token);
