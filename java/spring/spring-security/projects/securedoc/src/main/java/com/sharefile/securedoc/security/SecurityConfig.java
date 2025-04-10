@@ -3,7 +3,7 @@ package com.sharefile.securedoc.security;
 import com.sharefile.securedoc.constant.Constants;
 import com.sharefile.securedoc.handlers.ApiAccessDeniedHandler;
 import com.sharefile.securedoc.handlers.ApiAuthenticationEntryPoint;
-import com.sharefile.securedoc.service.user.IUserService;
+import com.sharefile.securedoc.service.UserService;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,8 +74,9 @@ public class SecurityConfig {
 
     //registering the authentication provider with authentication manager
     //ProviderManager is an implementation of authentication manager
+    //instead of user details service we are using our own UserService to fetch user from db etc.
     @Bean
-    public ProviderManager providerManager(IUserService userDetailsService, PasswordEncoder passwordEncoder) {
+    public ProviderManager providerManager(UserService userDetailsService, PasswordEncoder passwordEncoder) {
         var apiProvider = new ApiAuthenticationProvider(userDetailsService, passwordEncoder);
         return new ProviderManager(apiProvider);
     }

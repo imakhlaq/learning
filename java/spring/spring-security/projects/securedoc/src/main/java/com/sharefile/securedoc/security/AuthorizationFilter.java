@@ -4,7 +4,6 @@ import com.sharefile.securedoc.domain.RequestContext;
 import com.sharefile.securedoc.domain.Token;
 import com.sharefile.securedoc.domain.TokenData;
 import com.sharefile.securedoc.service.JwtService;
-import com.sharefile.securedoc.service.user.IUserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

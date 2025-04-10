@@ -2,7 +2,7 @@ package com.sharefile.securedoc.security;
 
 import com.sharefile.securedoc.domain.UserPrincipal;
 import com.sharefile.securedoc.exception.ApiException;
-import com.sharefile.securedoc.service.user.IUserService;
+import com.sharefile.securedoc.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -24,7 +24,7 @@ public class ApiAuthenticationProvider implements AuthenticationProvider {
     /**
      * Service for managing user-related operations.
      */
-    private final IUserService userService;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
     /**

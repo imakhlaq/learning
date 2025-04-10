@@ -4,7 +4,7 @@ import com.sharefile.securedoc.domain.Response;
 import com.sharefile.securedoc.dtorequest.UserRequest;
 import com.sharefile.securedoc.handlers.ApiLogoutHandler;
 import com.sharefile.securedoc.service.JwtService;
-import com.sharefile.securedoc.service.user.IUserService;
+import com.sharefile.securedoc.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -26,7 +26,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final IUserService userService;
+    private final UserService userService;
     private final JwtService jwtservice;
     private final ApiLogoutHandler logoutHandler;
 

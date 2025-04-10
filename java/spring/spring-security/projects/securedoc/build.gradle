@@ -44,6 +44,10 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
     testImplementation 'org.assertj:assertj-core:4.0.0-M1'
+    // https://mvnrepository.com/artifact/dev.samstevens.totp/totp
+    implementation 'dev.samstevens.totp:totp:1.7.1'
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    implementation 'commons-io:commons-io:2.18.0'
 }
 
 tasks.named('test') {

@@ -8,7 +8,7 @@ import com.sharefile.securedoc.dtorequest.LoginRequest;
 import com.sharefile.securedoc.enumeration.LoginType;
 import com.sharefile.securedoc.enumeration.TokenType;
 import com.sharefile.securedoc.service.JwtService;
-import com.sharefile.securedoc.service.user.IUserService;
+import com.sharefile.securedoc.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,11 +38,11 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
      Spring in build providers uses the UserDetailsService implementation to load the user and check credentials.
      But here we are using our own UserService to do this
      */
-    private final IUserService userService;
+    private final UserService userService;
     private final JwtService jwtService;
 
     protected LoginAuthenticationFilter(AuthenticationManager authenticationManager,
-                                        IUserService userService,
+                                        UserService userService,
                                         JwtService jwtService) {
 
         //route on which the login request will arrive

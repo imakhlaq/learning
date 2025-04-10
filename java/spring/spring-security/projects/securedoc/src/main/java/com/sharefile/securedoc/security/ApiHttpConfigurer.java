@@ -1,7 +1,7 @@
 package com.sharefile.securedoc.security;
 
 import com.sharefile.securedoc.service.JwtService;
-import com.sharefile.securedoc.service.user.IUserService;
+import com.sharefile.securedoc.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class ApiHttpConfigurer extends AbstractHttpConfigurer<ApiHttpConfigurer, HttpSecurity> {
     private final AuthorizationFilter authorizationFilter;
     private final ApiAuthenticationProvider authenticationProvider;
-    private final IUserService userService;
+    private final UserService userService;
     private final JwtService jwtService;
     private final AuthenticationConfiguration authenticationConfiguration; // Need to get a hold of the authentication manager
 
