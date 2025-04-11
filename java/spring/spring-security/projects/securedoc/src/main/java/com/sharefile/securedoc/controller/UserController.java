@@ -42,8 +42,8 @@ public class UserController {
     private final JwtService jwtservice;
     private final ApiLogoutHandler logoutHandler;
 
-    @PatchMapping("/test")
-    @PreAuthorize("hasAnyAuthority('user:update') or hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    @GetMapping("/test")
+    @PreAuthorize("hasAnyAuthority('user:update') or hasAnyRole('USER','ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<User> test(@AuthenticationPrincipal User userPrincipal, HttpServletRequest request) {
         return ResponseEntity.ok().body(userPrincipal);
     }

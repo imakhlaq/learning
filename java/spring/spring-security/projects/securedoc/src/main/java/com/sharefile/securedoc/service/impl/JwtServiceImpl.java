@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ import static com.sharefile.securedoc.enumeration.TokenType.ACCESS;
 import static com.sharefile.securedoc.enumeration.TokenType.REFRESH;
 import static io.jsonwebtoken.Header.JWT_TYPE;
 import static io.jsonwebtoken.Header.TYPE;
-import static org.springframework.boot.web.server.Cookie.SameSite.NONE;
+import static org.springframework.boot.web.server.Cookie.SameSite.*;
 import static org.springframework.security.core.authority.AuthorityUtils.commaSeparatedStringToAuthorityList;
 
 @Service
@@ -130,6 +131,8 @@ public class JwtServiceImpl extends JwtConfiguration implements JwtService {
 
     /**
      * A function that adds a cookie to the response.
+     * <p>
+     * NOTE : WHERE you are expecting a cookies in response do " credentials: "include", " else the cookie will not be saved by browser
      */
     private final TriConsumer<HttpServletResponse, User, TokenType> addCookie = (response, user, tokenType) -> {
         switch (tokenType) {
@@ -137,25 +140,25 @@ public class JwtServiceImpl extends JwtConfiguration implements JwtService {
                 // Create an access token for the user.
                 var accessToken = createToken(user, Token::getAccess);
                 // Create a new cookie.
-                var cookie = new Cookie(tokenType.name(), accessToken);
+                var cookie = new Cookie(tokenType.getValue(), accessToken);
                 // Set the cookie properties.
                 cookie.setPath("/");
                 cookie.setHttpOnly(true);
-                //cookie.setSecure(true); only works with https
                 cookie.setMaxAge(2 * 60);
-                cookie.setAttribute("SameSite", NONE.name());//important because CSRF token will be sent form frontend to backend
+                cookie.setSecure(false);
+                cookie.setAttribute("SameSite", STRICT.name());//important because CSRF token will be sent form frontend to backend
                 // Add the cookie to the response.
                 response.addCookie(cookie);
             }
             case REFRESH -> {
                 // Create an access token for the user.
                 var refreshToken = createToken(user, Token::getRefresh);
-                var cookie = new Cookie(tokenType.name(), refreshToken);
+                var cookie = new Cookie(tokenType.getValue(), refreshToken);
                 cookie.setPath("/");
                 cookie.setHttpOnly(true);
-                //cookie.setSecure(true); only works with https
                 cookie.setMaxAge(2 * 60 * 60);
-                cookie.setAttribute("SameSite", NONE.name());//important because CSRF token will be sent form frontend to backend
+                cookie.setSecure(false);// true only works with https
+                cookie.setAttribute("SameSite", STRICT.name());//important because CSRF token will be sent form frontend to backend
                 response.addCookie(cookie);
             }
         }
