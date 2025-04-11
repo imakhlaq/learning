@@ -16,6 +16,8 @@ import org.springframework.util.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+//by default authorization server doesn't issue refresh to the public client so these three classes are uses
+//to bypass these
 public class PublicClientRefreshTokenAuthenticationConverter implements AuthenticationConverter {
 
     @Override

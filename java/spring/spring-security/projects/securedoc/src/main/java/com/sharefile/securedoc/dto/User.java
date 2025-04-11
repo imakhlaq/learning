@@ -24,5 +24,5 @@ public class User {
     private Boolean accountNonLocked;
     private Boolean credentialsNonExpired;
     private Boolean enabled;
-    private boolean mfa;
+    private Boolean mfa;
 }

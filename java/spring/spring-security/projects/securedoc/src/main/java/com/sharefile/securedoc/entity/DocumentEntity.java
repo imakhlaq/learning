@@ -29,8 +29,7 @@ public class DocumentEntity extends Auditable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "user_id",
-        referencedColumnName = "id", // Let's make the id a foreign key
-        foreignKey = @ForeignKey(name = "fk_documents_owner", foreignKeyDefinition = "foreign key /* FK */ (user_id) references UserEntity", value = ConstraintMode.CONSTRAINT)
+        referencedColumnName = "id"// Let's make the id a foreign key
     )
     private UserEntity owner;
 }

@@ -7,6 +7,7 @@ import com.sharefile.securedoc.enumeration.TokenType;
 import com.sharefile.securedoc.function.TriConsumer;
 import com.sharefile.securedoc.security.JwtConfiguration;
 import com.sharefile.securedoc.service.JwtService;
+import com.sharefile.securedoc.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -40,8 +41,7 @@ import static org.springframework.security.core.authority.AuthorityUtils.commaSe
 @RequiredArgsConstructor
 @Slf4j
 public class JwtServiceImpl extends JwtConfiguration implements JwtService {
-
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     //accessing the key from JwtConfiguration and base64 encoding itt
     private final Supplier<SecretKey> key = () -> Keys.hmacShaKeyFor(Decoders.BASE64.decode(getSecret()));
@@ -203,7 +203,7 @@ public class JwtServiceImpl extends JwtConfiguration implements JwtService {
     //extract the token from the request
     @Override
     public Optional<String> extractToken(HttpServletRequest request, String cookieName) {
-        return extractToken(request, cookieName);
+        return extractToken.apply(request, cookieName);
     }
 
     //add access or refresh cookie to the response (base on the TokenType)

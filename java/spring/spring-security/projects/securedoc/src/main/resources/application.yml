@@ -17,9 +17,10 @@ spring:
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
-    database-platform: org.hibernate.dialect.PostgreSQLInnoDBDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: true
     show-sql: true
     hibernate:
@@ -30,7 +31,7 @@ spring:
         format_sql: true
   sql:
     init:
-      mode: never #means don't run these files when you want to use set to other value
+      mode: never  #to execuate sql scripts in data.sql and schema.sql (don't forget to set it to never after first time)
       continue-on-error: false
       schema-locations: classpath:/data/schema.sql
       data-locations: classpath:/data/data.sql

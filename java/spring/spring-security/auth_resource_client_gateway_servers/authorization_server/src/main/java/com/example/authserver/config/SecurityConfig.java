@@ -3,6 +3,7 @@ package com.example.authserver.config;
 import com.example.authserver.config.social.*;
 import com.example.authserver.repo.IUserRepo;
 import com.example.authserver.service.RegisteredClientRepositoryImpl;
+import com.example.authserver.service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -42,6 +43,7 @@ import java.util.function.Consumer;
 public class SecurityConfig {
 
     private final IUserRepo userRepo;
+    private final UserDetailsServiceImpl userDetailsService;
 
     //this is for authorization server
     @Bean
@@ -106,7 +108,7 @@ public class SecurityConfig {
             .oauth2Login(oauth2Login -> oauth2Login
 
                 .userInfoEndpoint(userInfo -> userInfo
-                    .userService(new CustomOAuth2UserService()) //after oauth login customize the object
+                    .userService(new CustomOAuth2UserService(userDetailsService)) //after oauth login customize the object
                 )
                 .successHandler(new OAuthAuthenticationSuccessHandler(this.userRepo))
                 .failureHandler(new OauthAuthenticationFailureHandler())

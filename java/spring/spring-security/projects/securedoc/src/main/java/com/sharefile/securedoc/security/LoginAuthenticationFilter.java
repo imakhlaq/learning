@@ -20,7 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
@@ -30,7 +29,6 @@ import static com.sharefile.securedoc.utils.RequestUtils.handleErrorResponse;
 import static org.springframework.http.HttpMethod.POST;
 
 @Slf4j
-@Component
 public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     public static final String LOGIN_PATH = "/user/login";
@@ -100,7 +98,7 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
         userService.updateLoginAttempt(user.getEmail(), LoginType.LOGIN_SUCCESS);
 
         //determine the isMfa is active or not and base on that send response to user
-        var httpResponse = user.isMfa() ? sendQrCode(request, user) : sendResponse(request, response, user);
+        var httpResponse = user.getMfa() ? sendQrCode(request, user) : sendResponse(request, response, user);
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
         // Write response to output stream

@@ -27,7 +27,7 @@ public abstract class Auditable {
     @Id
     @SequenceGenerator(name = "primary_key_seq", allocationSize = 1, sequenceName = "primary_key_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "primary_key_seq")
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id", updatable = false)
     // this will be our primary key (indexing on number is much better than UUID)(DO not send this id in the response)
     private Long id;
     private String referenceId = new AlternativeJdkIdGenerator().generateId().toString();
@@ -41,7 +41,6 @@ public abstract class Auditable {
     private LocalDateTime createdAt;
     @Column(name = "updated_at", nullable = false)
     @CreatedDate
-    @NotNull
     private LocalDateTime updatedAt;
     /**
      * ======================
@@ -52,6 +51,7 @@ public abstract class Auditable {
      */
     @PrePersist
     protected void beforePersist() { //will be called before persisting the entity
+        //getting currently logged-in user id
         var userId = RequestContext.getUserId();
         if (userId == null) throw new ApiException("Can't persist a entity without user ID");
         setCreatedBy(userId);

@@ -1,7 +1,7 @@
 package com.sharefile.securedoc.event.listener;
 
 import com.sharefile.securedoc.event.UserEvent;
-import com.sharefile.securedoc.service.email.IEmailService;
+import com.sharefile.securedoc.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserEventListener {
 
-    private final IEmailService emailService;
+    private final EmailService emailService;
 
     @EventListener(UserEvent.class)
     public void onUserEvent(UserEvent event) {

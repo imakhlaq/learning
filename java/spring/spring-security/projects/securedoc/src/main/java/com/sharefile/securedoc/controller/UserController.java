@@ -42,6 +42,12 @@ public class UserController {
     private final JwtService jwtservice;
     private final ApiLogoutHandler logoutHandler;
 
+    @PatchMapping("/test")
+    @PreAuthorize("hasAnyAuthority('user:update') or hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<User> test(@AuthenticationPrincipal User userPrincipal, HttpServletRequest request) {
+        return ResponseEntity.ok().body(userPrincipal);
+    }
+
     @PostMapping("/register")//because of @Valid spring will validate the req body
     public ResponseEntity<Response> register(@RequestBody @Valid UserRequest user, HttpServletRequest request) {
         userService.createUser(
@@ -49,7 +55,6 @@ public class UserController {
             user.getLastName(),
             user.getPassword(),
             user.getEmail());
-
         return ResponseEntity.created(URI.create(""))
             .body(getResponse(request, Map.of(), "Account is created check email to activate your account", HttpStatus.CREATED));
     }

@@ -34,6 +34,7 @@ public class UserEntity extends Auditable {
     private Boolean accountNonLocked;
     private Boolean credentialsNonExpired;
     private Boolean enabled;
+    @Column(columnDefinition = "boolean default false")
     private Boolean mfa;
     /*
    =================

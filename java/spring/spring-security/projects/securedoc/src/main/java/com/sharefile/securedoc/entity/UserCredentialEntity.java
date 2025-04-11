@@ -14,7 +14,7 @@ import org.hibernate.annotations.OnDeleteAction;
 public class UserCredentialEntity extends Auditable {
     private String password;
     @OneToOne(fetch = FetchType.EAGER, targetEntity = UserEntity.class)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true) //show this column as id

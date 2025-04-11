@@ -56,7 +56,7 @@ public class UserUtils {
         return user;
     }
     public static Boolean isCredentialExpired(UserCredentialEntity userCredentialEntity) {
-        return userCredentialEntity.getCreatedAt().plusDays(90).isBefore(LocalDateTime.now());
+        return userCredentialEntity.getCreatedAt().plusDays(90).isAfter(LocalDateTime.now());
     }
 
     //2 Helper method to create the QR code data

@@ -19,6 +19,8 @@ public class User {
 
     private String username;
     private String password;
+    private String authType;
+    private String authProviderId;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

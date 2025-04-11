@@ -89,11 +89,6 @@ public class HandleException extends ResponseEntityExceptionHandler implements E
         log.error("AccessDeniedException: {}", exception.getMessage());
         return new ResponseEntity<>(handleErrorResponse("Access denied. You don't have access", getRootCauseMessage(exception), request, FORBIDDEN), FORBIDDEN);
     }
-    @ExceptionHandler(Exception.class) //Mother of all exception
-    public ResponseEntity<Response> exception(Exception exception) {
-        log.error("Exception: {}", exception.getMessage());
-        return new ResponseEntity<>(handleErrorResponse(processErrorMessage(exception), getRootCauseMessage(exception), request, INTERNAL_SERVER_ERROR), INTERNAL_SERVER_ERROR);
-    }
 
     @ExceptionHandler(TransactionalException.class) //Mother of all exception
     public ResponseEntity<Response> transactionalException(TransactionalException exception) {
@@ -158,5 +153,10 @@ public class HandleException extends ResponseEntityExceptionHandler implements E
             }
         }
         return "An error occurred. Please kindly try again";
+    }
+    @ExceptionHandler(Exception.class) //Mother of all exception
+    public ResponseEntity<Response> exception(Exception exception) {
+        log.error("Exception: {}", exception.getMessage());
+        return new ResponseEntity<>(handleErrorResponse(processErrorMessage(exception), getRootCauseMessage(exception), request, INTERNAL_SERVER_ERROR), INTERNAL_SERVER_ERROR);
     }
 }

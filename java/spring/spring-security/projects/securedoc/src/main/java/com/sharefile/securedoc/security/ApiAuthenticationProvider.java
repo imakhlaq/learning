@@ -31,10 +31,10 @@ public class ApiAuthenticationProvider implements AuthenticationProvider {
      * Consumer to validate user account status.
      */
     private final Consumer<UserPrincipal> validAccount = (userPrincipal) -> {
-        if (userPrincipal.isAccountNonLocked()) throw new LockedException("Account is locked");
-        if (userPrincipal.isAccountNonExpired()) throw new DisabledException("Account is expired");
-        if (userPrincipal.isCredentialsNonExpired()) throw new CredentialsExpiredException("Credentials are expired");
-        if (userPrincipal.isEnabled()) throw new DisabledException("User account is enabled");
+        if (!userPrincipal.isAccountNonLocked()) throw new LockedException("Account is locked");
+        if (!userPrincipal.isAccountNonExpired()) throw new DisabledException("Account is expired");
+        if (!userPrincipal.isCredentialsNonExpired()) throw new CredentialsExpiredException("Credentials are expired");
+        if (!userPrincipal.isEnabled()) throw new DisabledException("User account is enabled");
     };
 
     /**

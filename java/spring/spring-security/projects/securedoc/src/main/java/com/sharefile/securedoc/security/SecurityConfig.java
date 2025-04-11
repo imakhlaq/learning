@@ -81,11 +81,6 @@ public class SecurityConfig {
         return new ProviderManager(apiProvider);
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(Constants.STRENGTH);
-    }
-
     public CorsConfigurationSource corsConfigurationSource() {
         var corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);

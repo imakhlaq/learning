@@ -20,8 +20,8 @@ spring:
       client:
         registration:
           google:
-            clientId: 432843073336-25dti6760u9drsjee2rmuho3au9ph90n.apps.googleusercontent.com # replace with your client id
-            clientSecret: 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 # replace with your client secret
+            clientId: ${CLIENT_ID} # replace with your client id
+            clientSecret: ${CLIENT_SECRET} # replace with your client secret
             authorization-grant-type: authorization_code
 server:
   port: 9000

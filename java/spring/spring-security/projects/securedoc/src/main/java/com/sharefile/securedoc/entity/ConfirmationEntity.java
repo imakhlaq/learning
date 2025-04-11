@@ -21,7 +21,7 @@ import java.util.UUID;
 public class ConfirmationEntity extends Auditable {
     private String key;
     @OneToOne(fetch = FetchType.EAGER, targetEntity = UserEntity.class)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true) //show this column as id
@@ -33,8 +33,8 @@ public class ConfirmationEntity extends Auditable {
    Generate new UUID for Key for each object created
    ==================
     */
-    public ConfirmationEntity(UserEntity user) {
+    public ConfirmationEntity(UserEntity userEntity) {
         this.key = UUID.randomUUID().toString();
-        this.userEntity = user;
+        this.userEntity = userEntity;
     }
 }

@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new ApiException("User not Found, UserEntity cannot be found by email"));
     }
     private UserEntity getUserEntityByUserId(String userId) {
-        return userRepo.findUserEntitiesByUserId(userId)
+        return userRepo.findUserByUserId(userId)
             .orElseThrow(() -> new ApiException("User not found"));
     }
 
@@ -106,9 +106,9 @@ public class UserServiceImpl implements UserService {
         credentialRepo.save(credentialEntity);
         //creating a confirmation entity
         //confirmEntity have a UUID that is sent in the url email as link to confirm the user email
-        var confirmationEntity = new ConfirmationEntity();
-        confirmationEntity.setUserEntity(userEntity);
+        var confirmationEntity = new ConfirmationEntity(userEntity);
         confirmationRepo.save(confirmationEntity);
+        System.out.println(confirmationEntity.getKey());
         //publishing user created event so that it can send email to user to confirm its email
         eventPublisher.publishEvent(new UserEvent(userEntity,
             EventType.REGISTRATION,
@@ -169,7 +169,7 @@ public class UserServiceImpl implements UserService {
     //Retrieve users based on their userId
     @Override
     public User getUserByUserId(String userId) {
-        var userEntity = userRepo.findUserEntitiesByUserId(userId)
+        var userEntity = userRepo.findUserByUserId(userId)
             .orElseThrow(() -> new ApiException("User Not found"));
         return fromUserEntity(userEntity, userEntity.getRole(), getUserCredentialById(userEntity.getId()));
     }

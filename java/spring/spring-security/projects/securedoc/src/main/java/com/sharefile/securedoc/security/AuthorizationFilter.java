@@ -24,9 +24,9 @@ import static com.sharefile.securedoc.enumeration.TokenType.ACCESS;
 import static com.sharefile.securedoc.enumeration.TokenType.REFRESH;
 import static com.sharefile.securedoc.utils.RequestUtils.handleErrorResponse;
 
+@Component
 @RequiredArgsConstructor
 @Slf4j
-@Component
 public class AuthorizationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
