@@ -1,7 +1,9 @@
 package com.sharefile.securedoc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sharefile.securedoc.enumeration.AuthProvider;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -45,6 +47,16 @@ public class UserEntity extends Auditable {
     private String qrCodeSecret;
     @Column(columnDefinition = "text")//JPA uses varchar256 by default
     private String qrCodeImageUri;
+
+    /*
+    =================
+    Social logins
+    =================
+  */
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+    private String providerId;
     /*
     =================
     USER AND USER_ROLES

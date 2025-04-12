@@ -4,6 +4,7 @@ spring:
     name: securedoci
   profiles:
     active: ${ACTIVE_PROFILE:dev}
+  #jaction config for serialization and deserialization
   jackson:
     default-property-inclusion: non_null
     serialization:
@@ -13,11 +14,13 @@ spring:
       write-date-keys-as-timestamps: false
     deserialization:
       fail-on-unknown-properties: false
+  #datasource config
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
+  #jpa config
   jpa:
     open-in-view: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -29,17 +32,20 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+  #seeding config
   sql:
     init:
       mode: never  #to execuate sql scripts in data.sql and schema.sql (don't forget to set it to never after first time)
       continue-on-error: false
       schema-locations: classpath:/data/schema.sql
       data-locations: classpath:/data/data.sql
+  #multipart(file upload) config
   servlet:
     multipart:
       enabled: true
       max-file-size: 1000MB
       max-request-size: 1000MB
+  #mail sever config
   mail:
     host: ${EMAIL_HOST}
     port: ${EMAIL_PORT}
@@ -60,12 +66,25 @@ spring:
             required: true
     verify:
       host: ${VERIFY_EMAIL_HOST}
+  # social login config
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            authorization-grant-type: 'authorization_code'
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+            scope: [ 'openid', 'profile', 'email' ]
+  #application server(tomcat) config
 server:
   port: ${CONTAINER_PORT:8080}
   error: #to replace default white page error
     path: /user/error # when an error happens sends to /user/error
     whitelabel:
       enabled: false
+  #jwt config
 jwt:
   expiration: ${JWT_EXPIRATION}
   secret: ${JWT_SECRET}

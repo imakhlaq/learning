@@ -7,6 +7,7 @@ import com.sharefile.securedoc.entity.ConfirmationEntity;
 import com.sharefile.securedoc.entity.RoleEntity;
 import com.sharefile.securedoc.entity.UserCredentialEntity;
 import com.sharefile.securedoc.entity.UserEntity;
+import com.sharefile.securedoc.enumeration.AuthProvider;
 import com.sharefile.securedoc.enumeration.Authority;
 import com.sharefile.securedoc.enumeration.EventType;
 import com.sharefile.securedoc.enumeration.LoginType;
@@ -23,6 +24,7 @@ import dev.samstevens.totp.code.DefaultCodeGenerator;
 import dev.samstevens.totp.code.DefaultCodeVerifier;
 import dev.samstevens.totp.time.SystemTimeProvider;
 import dev.samstevens.totp.time.TimeProvider;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -95,12 +98,28 @@ public class UserServiceImpl implements UserService {
         return fromUserEntity(userEntity, userEntity.getRole(), getUserCredentialById(userEntity.getId()));
     }
 
+    //when user signs in using social login
     @Override
-    public void createUser(String firstName, String lastName, String password, String email) {
+    public void createUserForSocialLogin(HttpServletResponse response, String firstName, String lastName, String password,
+                                         String email, AuthProvider authProvider, String authProviderId) {
+        //creating and a user role and saving it to db
+        var userEntity = userRepo.save(createNewUser(firstName, lastName, email));
+        userEntity.setProvider(authProvider);
+        userEntity.setProviderId(authProviderId);
+        //creating user credential with encoded password
+        var credentialEntity = new UserCredentialEntity(userEntity, null);//no password in auth login
+        credentialRepo.save(credentialEntity);
+
+    }
+    @Override
+    public void createUser(String firstName, String lastName, String password,
+                           String email) {
         //TODO perform checks like user already exits etc before saving
 
         //creating and a user role and saving it to db
         var userEntity = userRepo.save(createNewUser(firstName, lastName, email));
+        userEntity.setProvider(AuthProvider.local);
+        userEntity.setProviderId(null);
         //creating user credential with encoded password
         var credentialEntity = new UserCredentialEntity(userEntity, passwordEncoder.encode(password));//encode the password
         credentialRepo.save(credentialEntity);

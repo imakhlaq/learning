@@ -1,6 +1,9 @@
 package com.sharefile.securedoc.dto;
 
+import com.sharefile.securedoc.enumeration.AuthProvider;
 import lombok.Data;
+
+import java.util.Map;
 
 @Data
 public class User {
@@ -20,9 +23,12 @@ public class User {
     private String updatedAt;
     private String role;
     private String authorities;
+    private AuthProvider provider;
+    private String providerId;
     private Boolean accountNonExpired;
     private Boolean accountNonLocked;
     private Boolean credentialsNonExpired;
     private Boolean enabled;
     private Boolean mfa;
+    private Map<String, Object> attributes;
 }

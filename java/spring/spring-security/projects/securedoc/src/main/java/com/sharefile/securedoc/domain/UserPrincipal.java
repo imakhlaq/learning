@@ -7,18 +7,24 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Map;
 
 /*
 Spring boot need UserDetails
  */
 @AllArgsConstructor
-public class UserPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails, OAuth2User {
     @Getter
     private final User user;
     private final UserCredentialEntity userCredential;
 
+    @Override
+    public Map<String, Object> getAttributes() {
+        return user.getAttributes();
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.commaSeparatedStringToAuthorityList(user.getAuthorities());
@@ -46,5 +52,9 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return user.getEnabled();
+    }
+    @Override
+    public String getName() {
+        return user.getUserId();
     }
 }

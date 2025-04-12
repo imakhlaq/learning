@@ -3,11 +3,17 @@ package com.sharefile.securedoc.service;
 import com.sharefile.securedoc.dto.User;
 import com.sharefile.securedoc.entity.RoleEntity;
 import com.sharefile.securedoc.entity.UserCredentialEntity;
+import com.sharefile.securedoc.enumeration.AuthProvider;
 import com.sharefile.securedoc.enumeration.LoginType;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
-    void createUser(String firstName, String lastName, String password, String email);
+
+    void createUserForSocialLogin(HttpServletResponse response, String firstName, String lastName, String password,
+                                  String email, AuthProvider authProvider, String authProviderId);
+    void createUser(String firstName, String lastName, String password,
+                    String email);
     RoleEntity getRoleName(String name);
     void verifyAccountKey(String key);
     void updateLoginAttempt(String email, LoginType loginType);

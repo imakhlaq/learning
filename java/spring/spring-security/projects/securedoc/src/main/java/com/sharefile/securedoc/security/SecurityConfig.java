@@ -3,6 +3,9 @@ package com.sharefile.securedoc.security;
 import com.sharefile.securedoc.constant.Constants;
 import com.sharefile.securedoc.handlers.ApiAccessDeniedHandler;
 import com.sharefile.securedoc.handlers.ApiAuthenticationEntryPoint;
+import com.sharefile.securedoc.security.oauth.CustomStatelessAuthorizationRequestRepository;
+import com.sharefile.securedoc.security.oauth.OAuth2AuthenticationFailureHandler;
+import com.sharefile.securedoc.security.oauth.OAuth2AuthenticationSuccessHandler;
 import com.sharefile.securedoc.service.UserService;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +49,11 @@ public class SecurityConfig {
     private final ApiAuthenticationEntryPoint apiAuthenticationEntryPoint;
     private final ApiHttpConfigurer apiHttpConfigurer;
 
+    //oauth
+    private final CustomStatelessAuthorizationRequestRepository authorizationRequestRepository;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -69,6 +77,22 @@ public class SecurityConfig {
                     .hasAnyAuthority("document:delete")
                     .anyRequest().authenticated())//Any other user that does match "Authenticate them"
             .with(apiHttpConfigurer, Customizer.withDefaults());
+
+        //oauth
+        http
+            .oauth2Login(config ->
+                config
+                    .authorizationEndpoint(subConfig ->
+                        subConfig
+                            .baseUri("/oauth2/authorize")
+                            //   .authorizationRequestResolver(null)
+                            .authorizationRequestRepository(authorizationRequestRepository)
+                    )
+                    .userInfoEndpoint(userInfoEndpoint ->
+                        userInfoEndpoint.userService(null))
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .failureHandler(oAuth2AuthenticationFailureHandler)
+            );
         return http.build();
     }
 
