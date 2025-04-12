@@ -1,8 +1,8 @@
 package com.sharefile.securedoc.security;
 
-import com.sharefile.securedoc.constant.Constants;
 import com.sharefile.securedoc.handlers.ApiAccessDeniedHandler;
 import com.sharefile.securedoc.handlers.ApiAuthenticationEntryPoint;
+import com.sharefile.securedoc.security.oauth.CustomOAuth2UserService;
 import com.sharefile.securedoc.security.oauth.CustomStatelessAuthorizationRequestRepository;
 import com.sharefile.securedoc.security.oauth.OAuth2AuthenticationFailureHandler;
 import com.sharefile.securedoc.security.oauth.OAuth2AuthenticationSuccessHandler;
@@ -20,7 +20,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -38,6 +37,14 @@ import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTI
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpMethod.OPTIONS;
 
+/*
+Reference
+    :
+    : https://www.jessym.com/articles/stateless-oauth2-social-logins-with-spring-boot
+    : https://www.callicoder.com/spring-boot-security-oauth2-social-login-part-1/
+    : https://www.youtube.com/watch?v=a49JO1WjJSs&list=LL&index=4&t=34956s
+ */
+
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -53,6 +60,7 @@ public class SecurityConfig {
     private final CustomStatelessAuthorizationRequestRepository authorizationRequestRepository;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -64,7 +72,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(exception ->
-                exception.accessDeniedHandler(apiAccessDeniedHandler)
+                exception.accessDeniedHandler(apiAccessDeniedHandler)//when user enters wrong id/ password you have to redirect the user
                     .authenticationEntryPoint(apiAuthenticationEntryPoint))
             .authorizeHttpRequests(req ->
                 req
@@ -89,7 +97,8 @@ public class SecurityConfig {
                             .authorizationRequestRepository(authorizationRequestRepository)
                     )
                     .userInfoEndpoint(userInfoEndpoint ->
-                        userInfoEndpoint.userService(null))
+                        userInfoEndpoint.userService(customOAuth2UserService)
+                    )
                     .successHandler(oAuth2AuthenticationSuccessHandler)
                     .failureHandler(oAuth2AuthenticationFailureHandler)
             );

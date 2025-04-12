@@ -4,6 +4,7 @@ import com.sharefile.securedoc.dto.User;
 import com.sharefile.securedoc.entity.RoleEntity;
 import com.sharefile.securedoc.entity.UserCredentialEntity;
 import com.sharefile.securedoc.entity.UserEntity;
+import com.sharefile.securedoc.enumeration.AuthProvider;
 import com.sharefile.securedoc.exception.ApiException;
 import dev.samstevens.totp.code.HashingAlgorithm;
 import dev.samstevens.totp.qr.QrData;

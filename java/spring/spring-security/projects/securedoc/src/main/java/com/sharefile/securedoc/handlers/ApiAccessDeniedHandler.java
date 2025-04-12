@@ -11,6 +11,11 @@ import java.io.IOException;
 
 import static com.sharefile.securedoc.utils.RequestUtils.handleErrorResponse;
 
+/*
+SimpleUrlAuthenticationFailureHandler redirects users to a specified URL when authentication fails (e.g., incorrect username/password),
+while AccessDeniedHandler handles situations where a user is authenticated but lacks the necessary permissions to access a protected resource,
+typically resulting in a 403 Forbidden response.
+ */
 @Component
 public class ApiAccessDeniedHandler implements AccessDeniedHandler {
     @Override

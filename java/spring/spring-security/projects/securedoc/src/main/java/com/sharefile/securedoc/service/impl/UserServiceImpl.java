@@ -63,6 +63,7 @@ public class UserServiceImpl implements UserService {
     private final ApplicationEventPublisher eventPublisher;//To publish an event when a user is created so that we can get an email.
     private final PasswordEncoder passwordEncoder;
     private final CacheStore<String, Integer> userCacheStore;
+    private final UserService userService;
 
     private ConfirmationEntity getUserConfirmation(UserEntity user) {
         return confirmationRepo.findByUserEntity(user).orElse(null);
@@ -100,16 +101,20 @@ public class UserServiceImpl implements UserService {
 
     //when user signs in using social login
     @Override
-    public void createUserForSocialLogin(HttpServletResponse response, String firstName, String lastName, String password,
-                                         String email, AuthProvider authProvider, String authProviderId) {
+    public User createUserForSocialLogin(String firstName, String lastName, String email,
+                                         AuthProvider authProvider, String authProviderId, String imageUrl) {
+
         //creating and a user role and saving it to db
         var userEntity = userRepo.save(createNewUser(firstName, lastName, email));
         userEntity.setProvider(authProvider);
         userEntity.setProviderId(authProviderId);
+        userEntity.setImageUrl(imageUrl);
         //creating user credential with encoded password
         var credentialEntity = new UserCredentialEntity(userEntity, null);//no password in auth login
         credentialRepo.save(credentialEntity);
-
+        userRepo.save(userEntity);
+        
+        return fromUserEntity(userEntity, userEntity.getRole(), credentialEntity);
     }
     @Override
     public void createUser(String firstName, String lastName, String password,
