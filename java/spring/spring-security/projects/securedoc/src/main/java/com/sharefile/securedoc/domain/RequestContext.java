@@ -1,5 +1,8 @@
 package com.sharefile.securedoc.domain;
 
+/*
+This stores the current logged-in user id (because while creating a user we can specify who create/update the account)
+ */
 public class RequestContext {
     // CREATE NEW USERID FOR EVERY THREAD-LOCAL
     private static final ThreadLocal<Long> USER_ID = new ThreadLocal<>();
@@ -20,6 +23,7 @@ public class RequestContext {
     }
 
     public static Long getUserId() {
-        return USER_ID.get();
+        //if no user is logged in then 0 represent the system created the user 0
+        return USER_ID.get() == null ? 0 : USER_ID.get();
     }
 }

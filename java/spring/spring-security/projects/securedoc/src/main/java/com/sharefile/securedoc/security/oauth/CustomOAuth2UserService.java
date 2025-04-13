@@ -34,6 +34,16 @@ If a user with the same email already exists in our database then we update his 
 
 Use DefaultOAuth2UserService to get the user details, and use OAuth2AuthorizedClientService in conjunction with that data
  to persist the user information and their OAuth credentials (like tokens) into your database.
+
+
+ Why DefaultOAuth2UserService is not invoked?
+
+ The answer is that by default if you don't provide any scopes when configuring the Google OAuth2 client
+ Spring Boot uses the defaults that are provided in the CommonOAuth2Provider class. And the defaults scopes are: openid, profile, email.
+  By including the openid scope Spring Boot will use OidcUserService implementation of the OAuth2UserService interface not the DefaultOAuth2UserService.
+ So you should extend OidcUserService
+
+ if u hve openid in the scope then use DefaultOpenidService
  */
 @Service
 @RequiredArgsConstructor

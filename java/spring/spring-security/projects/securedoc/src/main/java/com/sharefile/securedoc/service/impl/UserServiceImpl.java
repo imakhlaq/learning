@@ -63,7 +63,6 @@ public class UserServiceImpl implements UserService {
     private final ApplicationEventPublisher eventPublisher;//To publish an event when a user is created so that we can get an email.
     private final PasswordEncoder passwordEncoder;
     private final CacheStore<String, Integer> userCacheStore;
-    private final UserService userService;
 
     private ConfirmationEntity getUserConfirmation(UserEntity user) {
         return confirmationRepo.findByUserEntity(user).orElse(null);
@@ -105,15 +104,15 @@ public class UserServiceImpl implements UserService {
                                          AuthProvider authProvider, String authProviderId, String imageUrl) {
 
         //creating and a user role and saving it to db
-        var userEntity = userRepo.save(createNewUser(firstName, lastName, email));
+        var userEntity = createNewUser(firstName, lastName, email);
         userEntity.setProvider(authProvider);
         userEntity.setProviderId(authProviderId);
         userEntity.setImageUrl(imageUrl);
         //creating user credential with encoded password
         var credentialEntity = new UserCredentialEntity(userEntity, null);//no password in auth login
-        credentialRepo.save(credentialEntity);
         userRepo.save(userEntity);
-        
+        credentialRepo.save(credentialEntity);
+
         return fromUserEntity(userEntity, userEntity.getRole(), credentialEntity);
     }
     @Override
@@ -122,9 +121,10 @@ public class UserServiceImpl implements UserService {
         //TODO perform checks like user already exits etc before saving
 
         //creating and a user role and saving it to db
-        var userEntity = userRepo.save(createNewUser(firstName, lastName, email));
+        var userEntity = createNewUser(firstName, lastName, email);
         userEntity.setProvider(AuthProvider.local);
         userEntity.setProviderId(null);
+        userRepo.save(userEntity);
         //creating user credential with encoded password
         var credentialEntity = new UserCredentialEntity(userEntity, passwordEncoder.encode(password));//encode the password
         credentialRepo.save(credentialEntity);

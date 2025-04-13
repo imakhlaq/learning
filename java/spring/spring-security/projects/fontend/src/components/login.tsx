@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { GOOGLE_AUTH_URL } from "../constents/oauth.ts";
 
 export default function Login() {
   const LOGIN_URL = "http://localhost:8085/user/login";
@@ -25,6 +26,10 @@ export default function Login() {
     }
   }
 
+  function socialLoginHandler() {
+    window.location.href = GOOGLE_AUTH_URL;
+  }
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -42,6 +47,9 @@ export default function Login() {
         />
         <button type={"submit"}>Login</button>
       </form>
+      <button onClick={socialLoginHandler}>
+        <p>Login With GOOGLE</p>
+      </button>
     </div>
   );
 }

@@ -11,7 +11,7 @@ public class Constants {
         "/user/refresh/token", "/user/resetpassword", "/user/image", "/user/verify/account", "user/verify/password", "user/verify/code"};
     public static final String[] PUBLIC_URLS = {"/user/resetpassword/reset/**", "/user/verify/resetpassword/**", "/user/resetpassword/**",
         "/user/verify/qrcode/**", "/user/login/**", "/user/verify/account/**", "/user/register/**", "/user/new/password/**", "/user/verify/**",
-        "/user/resetpassword/**", "/user/image/**", "/user/verify/password/**"};
+        "/user/resetpassword/**", "/user/image/**", "/user/verify/password/**", "/h2-console/**", "/swagger-ui/**", "/v3/**", "/oauth2/**"};
     public static final String ROLE_PREFIX = "ROLE_";
     public static final String AUTHORITIES = "authorities";
     public static final String THE_IN3ROVERT_LLC = "THE_IN3ROVERT_LLC";

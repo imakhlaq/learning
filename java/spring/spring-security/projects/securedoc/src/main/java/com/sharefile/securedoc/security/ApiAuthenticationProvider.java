@@ -53,6 +53,12 @@ public class ApiAuthenticationProvider implements AuthenticationProvider {
 
         //check if user exits
         if (user != null) {
+
+            /*
+            NOTE We have to type of authentication id and pass and social login
+            But the social login will not have password and credentials so you have to manage that here
+             */
+
             //if user exits get its credentials
             var userCredential = userService.getUserCredentialById(user.getId());
             //After getting the credentials we have to check if the credentials is expired.
