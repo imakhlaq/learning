@@ -1,8 +1,11 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import { apiAuthPrefix, DEFAULT_LOGIN_REDIRECT, publicRoutes } from "@/routes";
-
-const privateRoutes = ["/dashboard"];
+import {
+  apiAuthPrefix,
+  authRotes,
+  DEFAULT_LOGIN_REDIRECT,
+  publicRoutes,
+} from "@/routes";
 
 export default auth(async function (req, ctx) {
   const pathName = req.nextUrl.pathname;
@@ -15,7 +18,7 @@ export default auth(async function (req, ctx) {
   const isPublicRoutes = publicRoutes.includes(pathName);
 
   //private routes
-  const isAuthRoute = privateRoutes.includes(pathName);
+  const isAuthRoute = authRotes.includes(pathName);
 
   //if user trying to call login/register routes allow him
   if (isApiAuthRoute) return NextResponse.next();

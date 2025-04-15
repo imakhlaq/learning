@@ -11,48 +11,35 @@ import {
   FormMessage,
   FormControl,
 } from "@/components/ui/form";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema, ResetSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import { useState, useTransition } from "react";
-import { login } from "@/actions/login";
-import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { restPassword } from "@/actions/reset";
 
 type Props = {};
-export default function LoginForm({}: Props) {
-  //do async task inside the startTransition and until the work is complete the pending will be tru
+export default function ResetForm({}: Props) {
   const [isPending, startTransition] = useTransition();
-
-  //access the error from the url
-  const searchParam = useSearchParams();
-  //when user signed with different provider but same email
-  const urlError =
-    searchParam.get("error") === "OauthAccountNotLinked"
-      ? "Email already in use with different provider"
-      : "";
-
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof ResetSchema>>({
+    resolver: zodResolver(ResetSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
-  function handleSubmit(values: z.infer<typeof LoginSchema>) {
+  function handleSubmit(values: z.infer<typeof ResetSchema>) {
     setError("");
     setSuccess("");
     //doing async work
     startTransition(() => {
       //calling a server actions from client component
       //and inside the server action we form "credentials" signIn
-      login(values).then((data) => {
+      restPassword(values).then((data) => {
         setError(data?.error);
         setSuccess(data?.success);
       });
@@ -61,10 +48,9 @@ export default function LoginForm({}: Props) {
 
   return (
     <CardWrapper
-      headerLabel={"Welcome Back"}
-      backButtonLabel={"Don't have an account?"}
-      backButtonHref={"/auth/register"}
-      showSocial
+      headerLabel={"Forget your password"}
+      backButtonLabel={"Back to login"}
+      backButtonHref={"/auth/login"}
     >
       <Form {...form}>
         <form className={"space-y-6"} onClick={form.handleSubmit(handleSubmit)}>
@@ -88,40 +74,11 @@ export default function LoginForm({}: Props) {
                 </FormItem>
               )}
             />
-
-            {/* password from field */}
-            <FormField
-              control={form.control}
-              name={"password"}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder={"*******"}
-                      type={"password"}
-                    />
-                  </FormControl>
-                  {/* forget password */}
-                  <Button
-                    size={"sm"}
-                    variant={"link"}
-                    asChild
-                    className={"px-0 font-normal"}
-                  >
-                    <Link href={"/auth/reset"}>Forget Password</Link>
-                  </Button>
-                  {/* to change error message set in zod schema */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </div>
-          <FormError message={error || urlError} />
+          <FormError message={error} />
           <FormSuccess message={success} />
           <Button className={"w-full"} type={"submit"} disabled={isPending}>
-            Login
+            Send reset email
           </Button>
         </form>
       </Form>

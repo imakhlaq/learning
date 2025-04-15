@@ -5,8 +5,11 @@ import {
   text,
   primaryKey,
   integer,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
+
+export const userEnum = pgEnum("role", ["USER", "ADMIN", "MANAGER"]);
 
 export const users = pgTable("user", {
   id: text("id")
@@ -15,6 +18,7 @@ export const users = pgTable("user", {
   name: text("name"),
   email: text("email").unique(),
   password: text("password"),
+  role: userEnum().default("USER"),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 });
@@ -67,3 +71,23 @@ export const authenticators = pgTable(
     },
   ],
 );
+
+//for email verification
+export const verificationTokens = pgTable("verificationTokens", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  email: text("email"),
+  token: text("token").unique(),
+  expires: text("expires_at"),
+});
+
+//for password reset token
+export const passwordResetTokens = pgTable("passwordResetTokens", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  email: text("email"),
+  token: text("token").unique(),
+  expires: text("expires_at"),
+});

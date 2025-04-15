@@ -8,6 +8,7 @@ export default async function Page({}: Props) {
   return (
     <div>
       {JSON.stringify(session)}
+      {/* server actions inside the actions*/}
       <form
         action={async () => {
           "use server";
