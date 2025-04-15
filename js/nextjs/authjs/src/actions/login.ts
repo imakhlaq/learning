@@ -91,6 +91,7 @@ export async function login(vales: z.infer<typeof LoginSchema>) {
   }
 
   try {
+    //this will call the signing callback in the auth config
     //login using server actions
     await signIn("credentials", {
       email,

@@ -74,6 +74,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       //adding custom field on the token
       token.role = existingUser.role;
+      token.twoFactorAuthStatus = existingUser.is2FaEnable ?? false;
 
       return token;
     },
@@ -85,6 +86,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (token.role && session.user) {
         session.user.role = token.role;
+        session.user.twoFactorAuthStatus = token.twoFactorAuthStatus;
       }
       return session;
     },
@@ -102,10 +104,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       //checking for 2-factor auth
       if (existingUser.is2FaEnable) {
         /*
-                                                        twoFaConfirmation represent the success authentication,
-                                                        After sending a 2FA token user confirms it, and it will create a twoFaConfirmation,
-                                                                
-                                                                 */
+                                                                                twoFaConfirmation represent the success authentication,
+                                                                                After sending a 2FA token user confirms it, and it will create a twoFaConfirmation,
+                                                                                        
+                                                                                         */
         const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
           existingUser.id,
         );
