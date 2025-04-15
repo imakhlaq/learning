@@ -1,5 +1,8 @@
-"use server";
+/*
+This is a server action its same as writing an API and passing data on body
+ */
 
+"use server";
 import { getVerificationToken } from "@/data/verification-token";
 import { getUserByEmail } from "@/data/users";
 import { db } from "@/db";

@@ -1,9 +1,16 @@
 import { v4 as uuidv4 } from "uuid";
+import crypto from "crypto";
 import { getVerificationEmail } from "@/data/verification-token";
 import { db } from "@/db";
-import { passwordResetTokens, verificationTokens } from "@/db/schemas/user";
+import {
+  passwordResetTokens,
+  twoFactorAuthenticationTokens,
+  verificationTokens,
+} from "@/db/schemas/user";
 import { eq } from "drizzle-orm";
 import { passwordResetTokenByEmail } from "@/data/password-reset-token";
+import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
+import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 
 export async function generateVerificationToken(email: string) {
   const token = uuidv4();
@@ -58,4 +65,24 @@ export async function generatePasswordResetToken(email: string) {
   if (passwordResetToken.length == 0) return null;
 
   return passwordResetToken[0];
+}
+
+export async function generateTwoFactorToken(email: string) {
+  const token = crypto.randomInt(100_000, 1_000_000).toString();
+  const expires = new Date(new Date().getTime() + 3600 * 1000).toDateString();
+
+  const existingToken = await getTwoFactorTokenByEmail(email);
+  if (existingToken) {
+    await db
+      .delete(twoFactorAuthenticationTokens)
+      .where(eq(twoFactorAuthenticationTokens.id, existingToken.id));
+  }
+
+  const twoFactorToken = await db.insert(twoFactorAuthenticationTokens).values({
+    email,
+    token,
+    expires,
+  });
+
+  return twoFactorToken;
 }

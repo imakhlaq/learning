@@ -1,3 +1,7 @@
+/*
+This is a server action its same as writing an API and passing data on body
+ */
+
 "use server";
 import * as z from "zod";
 import { ResetSchema } from "@/schemas";

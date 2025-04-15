@@ -21,6 +21,7 @@ export const users = pgTable("user", {
   role: userEnum().default("USER"),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
+  is2FaEnable: boolean().$defaultFn(() => false),
 });
 
 export const accounts = pgTable(
@@ -90,4 +91,25 @@ export const passwordResetTokens = pgTable("passwordResetTokens", {
   email: text("email"),
   token: text("token").unique(),
   expires: text("expires_at"),
+});
+//for 2FA
+export const twoFactorAuthenticationTokens = pgTable(
+  "twoFactorAuthenticationTokens",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    email: text("email"),
+    token: text("token").unique(),
+    expires: text("expires_at"),
+  },
+);
+
+//2fa confirmation
+export const twoFaConfirmation = pgTable("twoFaConfirmation", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+
+  userId: text("user_id").references(() => users.id),
 });

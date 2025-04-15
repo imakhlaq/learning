@@ -36,6 +36,7 @@ export default function LoginForm({}: Props) {
 
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
+  const [twoFactor, setTwoFactor] = useState(false);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -52,10 +53,21 @@ export default function LoginForm({}: Props) {
     startTransition(() => {
       //calling a server actions from client component
       //and inside the server action we form "credentials" signIn
-      login(values).then((data) => {
-        setError(data?.error);
-        setSuccess(data?.success);
-      });
+      login(values)
+        .then((data) => {
+          if (data.error) {
+            form.reset();
+            setError(data.error);
+          }
+          if (data.success) {
+            form.reset();
+            setSuccess(data.success);
+          }
+          if (data.twoFactor) {
+            setTwoFactor(true);
+          }
+        })
+        .catch((e) => setError("Something went wrong"));
     });
   }
 
@@ -69,59 +81,80 @@ export default function LoginForm({}: Props) {
       <Form {...form}>
         <form className={"space-y-6"} onClick={form.handleSubmit(handleSubmit)}>
           <div className={"space-y-4"}>
-            {/* email from field */}
-            <FormField
-              control={form.control}
-              name={"email"}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder={"exmaple@gmail.com"}
-                      type={"email"}
-                    />
-                  </FormControl>
-                  {/* to change error message set in zod schema */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* password from field */}
-            <FormField
-              control={form.control}
-              name={"password"}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder={"*******"}
-                      type={"password"}
-                    />
-                  </FormControl>
-                  {/* forget password */}
-                  <Button
-                    size={"sm"}
-                    variant={"link"}
-                    asChild
-                    className={"px-0 font-normal"}
-                  >
-                    <Link href={"/auth/reset"}>Forget Password</Link>
-                  </Button>
-                  {/* to change error message set in zod schema */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* when backend sen the two factor=true  then render this form*/}
+            {twoFactor && (
+              <FormField
+                control={form.control}
+                name={"code"}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Two Factor Code</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder={"123456"} />
+                    </FormControl>
+                    {/* to change error message set in zod schema */}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            {/* by default show id and pass and when backend ask for 2FA code hide this code*/}
+            {!twoFactor && (
+              <>
+                {/* email from field */}
+                <FormField
+                  control={form.control}
+                  name={"email"}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder={"exmaple@gmail.com"}
+                          type={"email"}
+                        />
+                      </FormControl>
+                      {/* to change error message set in zod schema */}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* password from field */}
+                <FormField
+                  control={form.control}
+                  name={"password"}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder={"*******"}
+                          type={"password"}
+                        />
+                      </FormControl>
+                      {/* forget password */}
+                      <Button
+                        size={"sm"}
+                        variant={"link"}
+                        asChild
+                        className={"px-0 font-normal"}
+                      >
+                        <Link href={"/auth/reset"}>Forget Password</Link>
+                      </Button>
+                      {/* to change error message set in zod schema */}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
           </div>
           <FormError message={error || urlError} />
           <FormSuccess message={success} />
           <Button className={"w-full"} type={"submit"} disabled={isPending}>
-            Login
+            {twoFactor ? "Confirm" : "Login"}
           </Button>
         </form>
       </Form>

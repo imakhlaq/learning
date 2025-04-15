@@ -6,8 +6,9 @@ import { LoginSchema } from "@/schemas";
 import { getUserByEmail, getUserById } from "@/data/users";
 import bcrypt from "bcryptjs";
 import Google from "next-auth/providers/google";
-import { users } from "@/db/schemas/user";
+import { twoFaConfirmation, users } from "@/db/schemas/user";
 import { eq } from "drizzle-orm";
+import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 
 /*
 Sources:
@@ -87,6 +88,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session;
     },
+
+    //called when login (even when user uses auth provider or credentials)
     async signIn({ user, account }) {
       //allow oauth users to login without email verification
       if (account?.provider !== "credentials") return true;
@@ -95,6 +98,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const existingUser = await getUserById(user.id);
       // if user is using "credentials" and email is not verified
       if (!existingUser?.emailVerified) return false;
+
+      //checking for 2-factor auth
+      if (existingUser.is2FaEnable) {
+        /*
+                                                        twoFaConfirmation represent the success authentication,
+                                                        After sending a 2FA token user confirms it, and it will create a twoFaConfirmation,
+                                                                
+                                                                 */
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+          existingUser.id,
+        );
+        //if we don't have 2Fa Confirmation for a user then don't allow him to login
+        if (!twoFactorConfirmation) return false;
+
+        //and if we have a 2FA confirmation then delete(because next time user signs in they need to perfom)
+        // it and allow user to login
+        await db
+          .delete(twoFaConfirmation)
+          .where(eq(twoFaConfirmation.userId, user.id));
+      }
 
       return true; //returning true mean user is allowed to log in
     },
