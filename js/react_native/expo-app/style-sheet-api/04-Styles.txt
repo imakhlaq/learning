@@ -1,0 +1,44 @@
+- Their is no flowid units like rem or em in React native
+- You can define percentage unite and if the parent container dimensions are defined
+
+flex-1 -> means it will accupie the full screen
+
+width-25 -> setting the widthe of the screen(height-25)
+
+width-40% -> it the parent continer width is specified then this will accupie the 40% of parent width
+             (height-40%)
+
+padding-
+       padding 10 ( all around )
+       paddingTop 10 ( only top ) ( rest of direction too )
+       paddingHorizontal 10 ( 10 padding on horizental axis ( same for veritcal)
+
+margin-
+       same as the Padding
+
+border-
+        you have to apply every border seperately
+     borderWidth:3
+     borderColor:"red"
+     borderRadius:3 //use only on view dont use in the text (radious on text does't work properly)
+
+boxShadow-
+        box shadow does't work in the both the plateform simiarly ( onlt work in ios and not in android)
+
+        shadowColor:"#33333",
+        shadowOffset:{
+        width:6,
+        height:4,
+        },
+        shadowOpacity:.3,
+        shadowRadius:4,
+
+        //to make it work on android you hav to set a elevation property on android(or use third party packages)
+         elevation:10
+
+Style Inheritance
+        compare to style inheritance in css, in mobile doesn't work.
+        ( eg parent text styles get inherited to the childs elements like font size, text color )
+
+        In react native inheritance only work from Text parent to its child text parent
+        not View to Text

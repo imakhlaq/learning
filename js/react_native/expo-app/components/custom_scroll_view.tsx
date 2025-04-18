@@ -1,5 +1,7 @@
 import { ImageBackground, ScrollView, Text, View } from "react-native";
 import CustomButton from "@/components/custom_button";
+import CustomActivityIndicator from "@/components/custom-activity-indicator";
+import CustomAlert from "@/components/custom-alert";
 
 type Props = {};
 export default function CustomScrollView({}: Props) {
@@ -58,6 +60,9 @@ export default function CustomScrollView({}: Props) {
           veniam veritatis vitae voluptates!
         </Text>
         <CustomButton />
+
+        <CustomActivityIndicator />
+        <CustomAlert />
       </ScrollView>
     </View>
   );

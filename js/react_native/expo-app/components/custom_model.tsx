@@ -9,9 +9,10 @@ export default function CustomModel({}: Props) {
 
   return (
     <Modal
-      visible={isOpen}
+      visible={isOpen} //by default is visible is close
+      onRequestClose={() => setIsOpen(false)} //when close request is called(close button or background)
       animationType={"slide"}
-      presentationStyle={"pageSheet"}
+      presentationStyle={"pageSheet"} //only for ios
     >
       <View>
         <Text>
