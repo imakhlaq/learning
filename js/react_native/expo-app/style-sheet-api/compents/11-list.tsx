@@ -1,0 +1,3 @@
+/*
+Check pokemon game to see how to render a list
+ */
